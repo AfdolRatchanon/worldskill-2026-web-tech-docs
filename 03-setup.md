@@ -123,25 +123,6 @@ npm install -D nodemon
 }
 ```
 
-## สร้าง: `backend/.env`
-
-สร้างไฟล์ `.env` ที่ root ของ backend:
-
-```
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=รหัสผ่าน_mariadb_ของคุณ
-DB_NAME=worldskill2026
-JWT_SECRET=worldskill2026_secret_key_change_this
-FRONTEND_URL=http://localhost:3000
-PORT=8080
-```
-
-:::danger
-`JWT_SECRET` ห้ามเปิดเผย ถ้าหลุดทุกคนสร้าง token ปลอมได้ และห้าม commit ไฟล์ `.env` เข้า git
-:::
-
 ## ทดสอบ
 
 ยังไม่มี `src/app.js` ในบทนี้ — ทดสอบแค่ว่า packages ติดตั้งสำเร็จ:

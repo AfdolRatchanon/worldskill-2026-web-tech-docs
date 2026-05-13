@@ -38,7 +38,6 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=<รหัสผ่านจริง>
 DB_NAME=worldskill2026
-JWT_SECRET=<string ลับ>
 FRONTEND_URL=http://localhost:3000
 PORT=8080
 ```

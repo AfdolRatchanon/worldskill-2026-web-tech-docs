@@ -63,7 +63,26 @@ const payload = jwt.verify(token, process.env.JWT_SECRET);
 // payload = { id, username, role, full_name, iat, exp }
 ```
 
-## ชิ้นงาน — สร้าง `src/middlewares/auth.js`
+## ชิ้นงาน 1 — เพิ่มค่าลับใน `.env`
+
+เปิดไฟล์ `backend/.env` แล้วเพิ่ม `JWT_SECRET` (ตั้งค่าเป็นอะไรก็ได้ แต่ห้ามบอกใคร):
+
+```
+PORT=8080
+FRONTEND_URL=http://localhost:3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=รหัสผ่าน_mariadb_ของคุณ
+DB_NAME=worldskill2026
+JWT_SECRET=worldskill2026_secret_key_change_this  # [!code ++]
+```
+
+:::danger
+`JWT_SECRET` ห้ามเปิดเผย ถ้าหลุดทุกคนสร้าง token ปลอมได้ และห้าม commit ไฟล์ `.env` เข้า git
+:::
+
+## ชิ้นงาน 2 — สร้าง `src/middlewares/auth.js`
 
 ```
 backend/

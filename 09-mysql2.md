@@ -45,7 +45,21 @@ Request 3  ─→  Connection #3  ─→  MariaDB
 (เสร็จแล้วคืน pool ไม่ปิด)
 ```
 
-## ชิ้นงาน — สร้าง `src/config/db.js`
+## ชิ้นงาน 1 — เพิ่มค่าเชื่อมต่อ DB ใน `.env`
+
+เปิดไฟล์ `backend/.env` แล้วเพิ่มข้อมูล MariaDB ของคุณ:
+
+```
+PORT=8080
+FRONTEND_URL=http://localhost:3000
+DB_HOST=localhost                       # [!code ++]
+DB_PORT=3306                            # [!code ++]
+DB_USER=root                            # [!code ++]
+DB_PASSWORD=รหัสผ่าน_mariadb_ของคุณ       # [!code ++]
+DB_NAME=worldskill2026                  # [!code ++]
+```
+
+## ชิ้นงาน 2 — สร้าง `src/config/db.js`
 
 ```
 backend/

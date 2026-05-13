@@ -3,71 +3,66 @@ layout: home
 
 hero:
   name: "WorldSkill 2026"
-  text: "Web Technologies"
-  tagline: "คู่มือสร้าง Backend ทีละขั้นตอน สำหรับการแข่งขัน WorldSkill Web Technologies"
+  text: "Web Technologies — Backend"
+  tagline: "คู่มือสร้าง Backend ทีละขั้นตอน สำหรับนักเรียนที่เตรียมแข่งขัน WorldSkill Web Technologies"
   actions:
     - theme: brand
-      text: เริ่มต้นที่บทที่ 1
+      text: เริ่มต้นที่บทที่ 1 →
       link: /01-installation
     - theme: alt
-      text: ภาพรวมระบบ
-      link: /02-intro
+      text: Checklist แข่งขัน
+      link: /29-checklist
 
 features:
-  - title: โค้ดสมบูรณ์ 100%
-    details: ทุกบรรทัดที่เขียนคือโค้ดจริงในโปรเจ็ค ไม่มีโค้ดตัวอย่างที่ต้องทิ้งทีหลัง เมื่อเรียนครบทุกบทจะได้ backend ที่รันได้จริง
-  - title: ทดสอบได้ทุกขั้นตอน
-    details: ทุกบทมีขั้นตอนทดสอบผ่าน Postman พร้อมบอกว่าต้องเห็นอะไร ก่อนไปบทถัดไปเสมอ
-  - title: เหมาะกับห้องแข่งขัน
+  - title: 📦 โค้ดต่อยอดทีละบท
+    details: แต่ละบทเพิ่มโค้ดเพียง 2–5 บรรทัดจากบทก่อน เห็นชัดว่าเพิ่มอะไร เปลี่ยนอะไร ไม่มีโค้ดที่ต้องทิ้งทีหลัง
+  - title: ✅ ทดสอบได้ทุกขั้นตอน
+    details: ทุกบทมีขั้นตอนทดสอบผ่าน Postman พร้อมบอกว่าต้องเห็นอะไร ผ่านแล้วค่อยไปบทถัดไป
+  - title: 🏆 เหมาะกับห้องแข่งขัน
     details: สอนผ่าน Command Line และ Postman ทั้งหมด ไม่ต้องพึ่ง extension หรือ internet ในห้องสอบ
 
 ---
 
-## ภาพรวมโปรเจ็ค
+## 🎯 ระบบที่จะสร้าง
 
-คู่มือนี้สอนวิธีสร้าง **Test Submission Management System** — ระบบจัดการการส่งผลสอบสำหรับการแข่งขัน WorldSkill Web Technologies
+**Test Submission Management System** — ระบบจัดการการส่งผลสอบสำหรับการแข่งขัน WorldSkill Web Technologies
 
-ระบบรองรับผู้ใช้ 3 บทบาท:
+| บทบาท | สิทธิ์ |
+|-------|--------|
+| 🎓 **Candidate** | เข้าสู่ระบบ ดูโจทย์ ส่ง URL แก้ไข ดูคะแนนตัวเอง |
+| ⚖️ **Judge** | เปิด/ปิดการสอบ ดูรายชื่อ ตรวจซ้ำ ยืนยันคะแนน |
+| 📊 **Manager** | ดูสถิติ ดู ranking export report |
 
-| บทบาท | หน้าที่ |
-|-------|---------|
-| **Candidate** | เข้าสู่ระบบ ดูโจทย์ ส่ง URL ติดตามสถานะ ดูคะแนน |
-| **Judge** | เปิด/ปิดการสอบ ดูรายชื่อ ตรวจซ้ำ ยืนยันคะแนน |
-| **Manager** | ดูสถิติ ranking และ export report |
-
-## Tech Stack
+## 🛠️ Tech Stack
 
 | ส่วน | Technology | Port |
 |------|-----------|------|
-| Frontend | React + Vite + Tailwind CSS | 3000 |
-| Backend | Node.js + Express | 8080 |
-| Database | MariaDB | 3306 |
+| 🖥️ Frontend | React + Vite + Tailwind CSS | 3000 |
+| ⚙️ Backend | Node.js + Express | 8080 |
+| 🗄️ Database | MariaDB | 3306 |
 
-## สารบัญ
+## 📚 สารบัญ (29 บท)
 
-| บท | หัวข้อ | สิ่งที่จะสร้าง |
-|----|--------|--------------|
-| บทที่ 1 | ติดตั้งเครื่องมือ | Node.js, MariaDB, Postman, VS Code |
-| บทที่ 2 | Backend คืออะไร | ภาพรวมระบบ, Data Flow |
-| บทที่ 3 | เตรียม Project | package.json, .env, โครงสร้างโฟลเดอร์ |
-| บทที่ 4 | Database และ Schema | schema.sql, seed.js |
-| บทที่ 5 | Express Server | db.js, app.js |
-| บทที่ 6 | Middlewares และ Utilities | auth.js, role.js, autoClose.js, paginate.js |
-| บทที่ 7 | Auth, Config และ Tasks API | login, logout, config, tasks |
-| บทที่ 8 | Submission และ Result System | submission CRUD, recheck, confirm |
-| บทที่ 9 | Judge API | session control, candidates |
-| บทที่ 10 | Manager API | statistics, report JSON/CSV/PDF |
-| บทที่ 11 | ทดสอบระบบทั้งหมด | Full system test checklist |
+| กลุ่ม | บท | เป้าหมาย |
+|------|-----|---------|
+| 🔧 เตรียมระบบ | 1–3 | ติดตั้งเครื่องมือ · ภาพรวม Backend · เตรียม Project |
+| ⚡ สร้าง Server | 4–10 | Express · req&res · dotenv · cors · Database & SQL · mysql2 · Checkpoint |
+| 🔐 ระบบ Login | 11–14 | bcryptjs · JWT · Auth Routes · Middleware Stack |
+| 🌐 Shared Endpoints | 15–16 | GET /api/config · GET /api/tasks |
+| 🎓 Candidate | 17–19 | GET/POST/PUT /api/my-submission · GET /api/my-result |
+| ⚖️ Judge | 20–24 | Session Control · Candidates · Submissions · Recheck · Confirm |
+| 📊 Manager | 25–28 | Statistics · Ranking · Sessions · Report |
+| 🏁 สรุป | 29 | Competition Checklist — ขั้นตอนเริ่มแข่งจริง |
 
-## วิธีใช้คู่มือนี้
+## 📖 วิธีใช้คู่มือนี้
 
 เรียนตามลำดับบท **อย่าข้ามบท** เพราะโค้ดแต่ละบทต่อยอดจากบทก่อนหน้า
 
 1. สร้างไฟล์และพิมพ์โค้ดตามที่แสดงในแต่ละบท
 2. ผ่านขั้นตอน **ทดสอบ** ก่อนไปบทถัดไปเสมอ
-3. โค้ดสุดท้ายเมื่อเรียนครบ = backend จริงที่รันได้
+3. เมื่อเรียนครบ 28 บท จะได้ backend ที่รันได้จริงครบทุก endpoint
 
-## โครงสร้างโฟลเดอร์ที่จะได้เมื่อเรียนครบ
+## 🗂️ โครงสร้างโฟลเดอร์เมื่อเรียนครบ
 
 ```
 backend/
@@ -80,12 +75,9 @@ backend/
 │   │   ├── role.js
 │   │   └── autoClose.js
 │   ├── routes/          (10 ไฟล์)
-│   ├── controllers/     (10 ไฟล์)
-│   └── utils/
-│       └── paginate.js
-├── database/
-│   ├── schema.sql
-│   └── seed.js
+│   └── controllers/     (10 ไฟล์)
 ├── .env
 └── package.json
 ```
+
+> **หมายเหตุ:** โฟลเดอร์ `database/` (schema.sql, seed.js) จะได้รับจากกรรมการตอนแข่ง ไม่ต้องเขียนเอง
