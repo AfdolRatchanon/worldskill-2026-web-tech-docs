@@ -1,41 +1,88 @@
 # บทที่ 3 — เตรียม Project
 
-## ไฟล์ที่จะสร้างในบทนี้
+> **บทนี้เตรียมอะไร:** สร้างโครงสร้างโฟลเดอร์, ติดตั้ง packages, และเข้าใจ concepts สำคัญ 3 อย่างก่อนเขียนโค้ด
 
-| ไฟล์ | หน้าที่ |
-|------|--------|
-| `backend/package.json` | dependencies และ npm scripts |
-| `backend/.env` | environment variables (รหัสผ่าน, secret key) |
+## CommonJS vs ESM — ทำไมใช้ `require` ไม่ใช่ `import`
 
-## โครงสร้างโฟลเดอร์ที่ต้องสร้าง
+```js
+// ✅ ที่เราใช้ — CommonJS (Node.js default)
+const express = require('express');
 
-สร้างโฟลเดอร์และไฟล์ตามโครงสร้างนี้ใน VS Code:
+// ❌ ห้ามใช้ — ES Module (ใช้ใน React/browser)
+import express from 'express';
+```
+
+Node.js ใช้ CommonJS เป็น default ถ้าใช้ `import` จะ error ทันที
+
+## nodemon และ npm scripts
+
+หลังจาก setup แล้ว เราใช้แค่ 2 คำสั่งนี้ตลอดการพัฒนา:
+
+```json
+"scripts": {
+  "dev":   "nodemon src/app.js",
+  "start": "node src/app.js",
+  "seed":  "node database/seed.js"
+}
+```
+
+| Script | ใช้เมื่อ |
+|--------|---------|
+| `npm run dev` | พัฒนา — restart อัตโนมัติทุกครั้งที่บันทึกไฟล์ |
+| `npm start` | production — รันครั้งเดียว ไม่ restart |
+| `npm run seed` | สร้างข้อมูลเริ่มต้น (ถ้าโจทย์กำหนด) |
+
+## API Map — endpoints ทั้งหมดที่จะสร้าง
+
+| Method | Endpoint | Role | บทที่สร้าง |
+|--------|----------|------|----------|
+| POST | /api/login | ทุก role | 13 |
+| POST | /api/logout | ทุก role | 13 |
+| GET | /api/config | ทุก role | 15 |
+| GET | /api/tasks | ทุก role | 16 |
+| GET | /api/my-submission | candidate | 17 |
+| POST | /api/my-submission | candidate | 18 |
+| PUT | /api/my-submission | candidate | 18 |
+| GET | /api/my-result | candidate | 19 |
+| PUT | /api/session/start | judge | 20 |
+| PUT | /api/session/close | judge | 20 |
+| GET | /api/candidates | judge | 21 |
+| GET | /api/submissions | judge | 22 |
+| POST | /api/submissions/:id/recheck | judge | 23 |
+| PUT | /api/results/:candidate_id/confirm | judge | 24 |
+| GET | /api/statistics/summary | manager | 25 |
+| GET | /api/statistics/status | manager | 25 |
+| GET | /api/statistics/ranking | manager | 26 |
+| GET | /api/sessions | manager | 27 |
+| GET | /api/report | manager | 28 |
+
+## โครงสร้างโฟลเดอร์ที่จะสร้างทั้งหมด
+
+สร้างโฟลเดอร์และไฟล์ตามโครงสร้างนี้ใน VS Code (คลิกขวาใน Explorer → **New Folder**):
 
 ```
 backend/
 ├── src/
 │   ├── config/
+│   ├── controllers/
 │   ├── middlewares/
 │   ├── routes/
-│   ├── controllers/
 │   └── utils/
 ├── database/
 ├── .env
 └── package.json
 ```
 
-โฟลเดอร์เปล่าๆ สร้างโดยคลิกขวาใน Explorer ของ VS Code → **New Folder**
+## ชิ้นงาน — ติดตั้ง Packages
 
-## ติดตั้ง Packages
-
-เปิด Terminal ใน VS Code (`Ctrl + `` `) แล้วรัน:
+เปิด Terminal ใน VS Code (`Ctrl + `` `) ให้แน่ใจว่า path อยู่ใน `backend/` แล้วรัน:
 
 ```bash
 npm init -y
 ```
 
 ```bash
-npm install express cors dotenv mysql2 bcryptjs jsonwebtoken pdfkit
+npm install express cors dotenv mysql2 bcryptjs jsonwebtoken
 ```
 
 ```bash
@@ -44,18 +91,13 @@ npm install -D nodemon
 
 ต้องเห็น `added XX packages` และไม่มีบรรทัด `error`
 
-**สิ่งสำคัญในคำสั่งนี้:**
-- `express` — web framework รับ HTTP request ส่ง response
-- `cors` — อนุญาตให้ frontend (port 3000) เรียก backend (port 8080) ได้
-- `dotenv` — อ่านค่าจากไฟล์ `.env` เข้า `process.env`
-- `mysql2` — เชื่อมต่อ MariaDB (ต้องใช้ `mysql2` ไม่ใช่ `mysql`)
-- `bcryptjs` — เข้ารหัส password ก่อนเก็บใน database
-- `jsonwebtoken` — สร้างและตรวจสอบ JWT token
-- `pdfkit` — สร้างไฟล์ PDF
+:::tip
+`npm warn` เป็น warning ปกติ — ไม่ใช่ error ไม่ต้องสนใจ
+:::
 
 ## สร้าง: `backend/package.json`
 
-หลังจาก `npm init -y` จะได้ไฟล์ `package.json` มาแล้ว ให้แก้ส่วน `scripts` ให้เป็นแบบนี้:
+หลังจาก `npm init -y` ให้แก้ส่วน `scripts`:
 
 ```json
 {
@@ -63,8 +105,8 @@ npm install -D nodemon
   "version": "1.0.0",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js",
     "dev":   "nodemon src/app.js",
+    "start": "node src/app.js",
     "seed":  "node database/seed.js"
   },
   "dependencies": {
@@ -73,18 +115,13 @@ npm install -D nodemon
     "dotenv":       "^16.4.5",
     "express":      "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mysql2":       "^3.9.7",
-    "pdfkit":       "^0.15.0"
+    "mysql2":       "^3.9.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
   }
 }
 ```
-
-**สิ่งสำคัญในโค้ดนี้:**
-- `"dev": "nodemon src/app.js"` — รีสตาร์ท server อัตโนมัติทุกครั้งที่บันทึกไฟล์ระหว่างพัฒนา
-- `"seed": "node database/seed.js"` — รันสคริปต์สร้างข้อมูลเริ่มต้น
 
 ## สร้าง: `backend/.env`
 
@@ -101,28 +138,26 @@ FRONTEND_URL=http://localhost:3000
 PORT=8080
 ```
 
-**สิ่งสำคัญในโค้ดนี้:**
-- `DB_PASSWORD` — ใส่รหัสผ่าน MariaDB ที่ตั้งไว้ตอนติดตั้ง
-- `JWT_SECRET` — ใช้เซ็น JWT token ต้องเก็บเป็นความลับ
-- ไฟล์นี้ห้าม commit เข้า git เพราะมีรหัสผ่าน
+:::danger
+`JWT_SECRET` ห้ามเปิดเผย ถ้าหลุดทุกคนสร้าง token ปลอมได้ และห้าม commit ไฟล์ `.env` เข้า git
+:::
 
 ## ทดสอบ
 
-รันคำสั่งนี้เพื่อตรวจสอบว่าติดตั้ง packages ครบ:
+ยังไม่มี `src/app.js` ในบทนี้ — ทดสอบแค่ว่า packages ติดตั้งสำเร็จ:
 
 ```bash
-node -e "require('express'); require('mysql2'); require('jsonwebtoken'); console.log('packages OK')"
+ls node_modules | head -5
 ```
 
-ต้องเห็น:
-```
-packages OK
-```
+ต้องเห็นโฟลเดอร์ `express`, `cors`, `dotenv` ใน `node_modules/`
+
+> การทดสอบรัน server จริงจะเกิดขึ้นใน **บทที่ 4** เมื่อสร้าง `src/app.js` แล้ว
 
 ## Common Errors
 
 | Error | สาเหตุ | วิธีแก้ |
-|-------|--------|---------|
+|-------|--------|---------| 
 | `Cannot find module 'express'` | install ยังไม่เสร็จ หรือรันนอกโฟลเดอร์ backend | ตรวจว่าอยู่ใน `backend/` แล้วรัน `npm install` |
 | `npm: command not found` | Node.js ไม่ได้ติดตั้ง | กลับไปบทที่ 1 |
-| `npm warn` | warning ปกติ ไม่ใช่ error | ไม่ต้องสนใจ — ดูแค่บรรทัด `error` |
+| `ENOENT: no such file or directory` | Terminal path ผิด | ดูว่า path ใน terminal ชี้ไปที่ `backend/` |
