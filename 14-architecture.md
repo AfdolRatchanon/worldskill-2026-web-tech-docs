@@ -4,6 +4,34 @@
 
 ## ส่วนที่ 1 — สร้าง `src/middlewares/role.js`
 
+### ปัญหา — Token บอกว่า "ใคร" แต่ไม่ได้บอกว่า "ทำอะไรได้"
+
+`authenticate` ตรวจแค่ว่า token ถูกต้องไหม — ไม่ได้ตรวจว่า role นั้นมีสิทธิ์ใช้ endpoint นั้นไหม:
+
+```
+GET /api/candidates  (endpoint ของ judge เท่านั้น)
+├── candidate01 ส่ง token → authenticate ผ่าน ❌ ไม่ควรเข้าได้
+└── judge01     ส่ง token → authenticate ผ่าน ✅ เข้าได้
+```
+
+ถ้าไม่มี role check — candidate สามารถเข้า endpoint ของ judge ได้ทั้งหมด
+
+### 401 vs 403
+
+| Status | ความหมาย | เกิดเมื่อ |
+|--------|----------|-----------|
+| 401 | ไม่รู้ว่าคุณคือใคร | ไม่มี token หรือ token ผิด/หมดอายุ |
+| 403 | รู้แล้วว่าคุณคือใคร แต่ไม่มีสิทธิ์ | token ถูก แต่ role ไม่ตรง |
+
+### วิธีแก้ — `authorize()` ตรวจ role ต่อจาก authenticate
+
+```
+authenticate → req.user = { id, role, ... }
+authorize('judge') → เช็คว่า req.user.role === 'judge' ไหม
+```
+
+### ชิ้นงาน — สร้าง `src/middlewares/role.js`
+
 ```
 backend/
 └── src/
@@ -16,9 +44,9 @@ backend/
 
 ```js
 // role.js — ตรวจสิทธิ์ตาม role หลังจาก authenticate แล้ว
-function authorize(...roles) {
+function authorize(...roles) {         // ...roles รับได้หลาย role: authorize('judge', 'manager')
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.user.role)) {  // req.user มาจาก authenticate ก่อนหน้า
       return res.status(403).json({ success: false, message: 'Access denied' });
     }
     next();
@@ -28,7 +56,29 @@ function authorize(...roles) {
 module.exports = authorize;
 ```
 
-ใช้งาน: `router.get('/path', authenticate, authorize('judge'), ctrl.fn)`
+:::tip
+`authorize` คืน function — ทำให้เรียกใช้แบบ `authorize('judge')` แล้วได้ middleware ไปเลย
+นี่คือ pattern ที่เรียกว่า "higher-order function"
+:::
+
+### การใช้งานใน Route
+
+```js
+const authenticate = require('../middlewares/auth');
+const authorize    = require('../middlewares/role');
+
+// authenticate ก่อน → ได้ req.user → authorize ตรวจ role
+router.get('/candidates', authenticate, authorize('judge'), ctrl.fn);
+router.get('/my-submission', authenticate, authorize('candidate'), ctrl.fn);
+router.get('/statistics/summary', authenticate, authorize('manager'), ctrl.fn);
+
+// รับได้หลาย role
+router.get('/tasks', authenticate, authorize('candidate', 'judge', 'manager'), ctrl.fn);
+```
+
+:::warning
+ต้องใส่ `authenticate` ก่อน `authorize` เสมอ — ถ้าสลับลำดับ `req.user` จะยังไม่มีค่าตอนที่ `authorize` รัน
+:::
 
 ## ส่วนที่ 2 — Request Flow Diagram
 

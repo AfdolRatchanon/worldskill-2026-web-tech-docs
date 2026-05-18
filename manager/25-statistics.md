@@ -71,7 +71,7 @@ async function getSummary(req, res) {
         total_candidates,
         submitted,
         confirmed,
-        average_score: Number(avg || 0).toFixed(2),  // AVG() คืน string — ต้องแปลงก่อนส่ง
+        average_score: parseFloat(Number(avg || 0).toFixed(2)),  // AVG() คืน string → Number แปลง → toFixed ทศนิยม 2 ตำแหน่ง → parseFloat แปลงกลับเป็น number
         session: session || null,
       },
       meta: {},
@@ -117,8 +117,8 @@ app.use('/api', require('./routes/statistics'));    // [!code ++]
 // ❌ ผิด — avg เป็น string
 const avg = rows[0].avg_score;
 
-// ✅ ถูก
-average_score: Number(avg || 0).toFixed(2)
+// ✅ ถูก — parseFloat ครอบนอกสุดเพื่อให้ได้ number ไม่ใช่ string
+average_score: parseFloat(Number(avg || 0).toFixed(2))
 ```
 :::
 
@@ -135,7 +135,7 @@ Authorization: Bearer <token ของ manager01>
   "success": true,
   "data": {
     "total_candidates": 5, "submitted": 0, "confirmed": 0,
-    "average_score": "0.00", "session": { "id": 1, "status": "waiting", ... }
+    "average_score": 0, "session": { "id": 1, "status": "open", ... }
   },
   "meta": {}
 }
@@ -148,4 +148,4 @@ Authorization: Bearer <token ของ manager01>
 | Error | สาเหตุ | วิธีแก้ |
 |-------|--------|---------| 
 | 403 `Access denied` | ใช้ token ของ judge/candidate | login เป็น manager ก่อน |
-| `average_score` เป็น string | ลืม `Number(...).toFixed(2)` | ดู warning ด้านบน |
+| `average_score` เป็น string | ลืม `parseFloat()` ครอบนอกสุด | ดู warning ด้านบน |
