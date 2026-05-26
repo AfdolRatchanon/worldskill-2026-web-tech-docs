@@ -3,15 +3,18 @@ layout: home
 
 hero:
   name: "WorldSkill 2026"
-  text: "Web Technologies — Backend"
-  tagline: "คู่มือสร้าง Backend ทีละขั้นตอน สำหรับนักเรียนที่เตรียมแข่งขัน WorldSkill Web Technologies"
+  text: "Web Technologies"
+  tagline: "คู่มือสร้าง Backend และ Frontend ทีละขั้นตอน สำหรับนักเรียนที่เตรียมแข่งขัน WorldSkill Web Technologies"
   actions:
     - theme: brand
-      text: เริ่มต้นที่บทที่ 1 →
-      link: /01-installation
+      text: ⚙️ เริ่ม Backend →
+      link: /backend/01-installation
+    - theme: brand
+      text: 🖥️ เริ่ม Frontend →
+      link: /frontend/01-setup
     - theme: alt
-      text: Checklist แข่งขัน
-      link: /29-checklist
+      text: 🏆 Checklist แข่งขัน
+      link: /backend/29-checklist
 
 features:
   - title: 📦 โค้ดต่อยอดทีละบท
@@ -41,7 +44,9 @@ features:
 | ⚙️ Backend | Node.js + Express | 8080 |
 | 🗄️ Database | MariaDB | 3306 |
 
-## 📚 สารบัญ (29 บท)
+## 📚 สารบัญ
+
+### ⚙️ Backend (29 บท)
 
 | กลุ่ม | บท | เป้าหมาย |
 |------|-----|---------|
@@ -54,6 +59,14 @@ features:
 | 📊 Manager | 25–28 | Statistics · Ranking · Sessions · Report |
 | 🏁 สรุป | 29 | Competition Checklist — ขั้นตอนเริ่มแข่งจริง |
 
+### 🖥️ Frontend (16 บท)
+
+| กลุ่ม | บท | เป้าหมาย |
+|------|-----|---------|
+| ⚡ เตรียมพร้อม | 1–6 | Setup · React · Tailwind · useState · useEffect · Axios |
+| 🔐 Auth | 7–10 | React Router · AuthContext · Login · ProtectedRoute |
+| 🧩 Components | 11–16 | Common · Candidate · Judge · Manager · Export |
+
 ## 📖 วิธีใช้คู่มือนี้
 
 เรียนตามลำดับบท **อย่าข้ามบท** เพราะโค้ดแต่ละบทต่อยอดจากบทก่อนหน้า
@@ -61,23 +74,3 @@ features:
 1. สร้างไฟล์และพิมพ์โค้ดตามที่แสดงในแต่ละบท
 2. ผ่านขั้นตอน **ทดสอบ** ก่อนไปบทถัดไปเสมอ
 3. เมื่อเรียนครบ 28 บท จะได้ backend ที่รันได้จริงครบทุก endpoint
-
-## 🗂️ โครงสร้างโฟลเดอร์เมื่อเรียนครบ
-
-```
-backend/
-├── src/
-│   ├── app.js
-│   ├── config/
-│   │   └── db.js
-│   ├── middlewares/
-│   │   ├── auth.js
-│   │   ├── role.js
-│   │   └── autoClose.js
-│   ├── routes/          (10 ไฟล์)
-│   └── controllers/     (10 ไฟล์)
-├── .env
-└── package.json
-```
-
-> **หมายเหตุ:** โฟลเดอร์ `database/` (schema.sql, seed.js) จะได้รับจากกรรมการตอนแข่ง ไม่ต้องเขียนเอง
