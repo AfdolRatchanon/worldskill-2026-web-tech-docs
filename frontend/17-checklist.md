@@ -1,4 +1,4 @@
-# บทที่ 17 — Frontend Competition Checklist
+# บทที่ 18 — Frontend Competition Checklist
 
 > **บทนี้เตรียมอะไร:** ขั้นตอนเริ่มแข่งขันจริงสำหรับ Frontend — เปิดโปรเจ็ค, รัน dev server, ตรวจสอบทุกหน้าทำงานได้ครบ
 
@@ -15,14 +15,25 @@ npm install
 # ต้องมีไฟล์ .env ที่ root ของ frontend/
 ```
 
-**ตรวจสอบ `.env`:**
+**หา IP เครื่องตัวเองก่อน:**
+
+```bash
+ipconfig
+```
+
+จด IPv4 Address เช่น `192.168.1.100`
+
+**ตรวจสอบและแก้ `.env`:**
 
 ```
-VITE_API_URL=http://localhost:8080/api
+VITE_API_URL=http://192.168.x.x:8080/api
 ```
 
-:::warning ตรวจ IP ก่อนแข่งทุกครั้ง
-ในห้องแข่งขัน IP ของ backend อาจเปลี่ยน — ถามกรรมการว่า backend รันอยู่ที่ IP อะไร แล้วแก้ `.env` ให้ถูกต้อง
+:::warning VITE_API_URL ต้องใช้ LAN IP — ไม่ใช่ localhost
+กรรมการเปิด frontend ผ่าน IP เครื่องของเรา browser ของกรรมการจะส่ง request ไปที่ `VITE_API_URL`
+ถ้าเป็น `localhost` → request ไปที่เครื่องกรรมการเอง ไม่ใช่ backend ของเรา → ทุก API call ล้มเหลว
+
+Backend ต้องแก้ `FRONTEND_URL=http://192.168.x.x:3000` ด้วย (ดูบทที่ 29 backend)
 :::
 
 ## รัน Dev Server
@@ -84,6 +95,8 @@ npm run dev
 - [ ] กด **Re-check** → Badge เปลี่ยนเป็น `checking` → รอ ~2.5 วินาที → `checked` + คะแนนปรากฏ
 - [ ] กด **Confirm** → เห็น "✓ Confirmed" แทนปุ่ม
 - [ ] กด **Close Session** → ยืนยัน → Badge เปลี่ยนเป็น `closed`
+- [ ] Submissions table แสดง URL ที่ candidate ส่ง (Frontend URL + Backend URL + Status badge)
+- [ ] DevTools → Network → เห็น request `GET /api/submissions` ทุก 5 วินาที
 
 ### Manager Dashboard (`/manager`)
 
@@ -93,15 +106,14 @@ npm run dev
 - [ ] Pass/Fail card แสดงจำนวน (ถ้ามี confirmed result)
 - [ ] RankingTable แสดง ranking พร้อม Pass/Fail badge
 - [ ] กดเลือก session อื่น → stats อัปเดตตาม session ที่เลือก
-- [ ] ปุ่ม Export JSON / CSV / PDF แสดงใน Ranking card
+- [ ] ปุ่ม Export JSON / CSV แสดงใน Ranking card
 
 ### Export (Manager)
 
 - [ ] กด **Export JSON** → browser ดาวน์โหลดไฟล์ `.json`
 - [ ] เปิดไฟล์ → ต้องเห็น JSON มีข้อมูล ranking
 - [ ] กด **Export CSV** → ดาวน์โหลด `.csv` → เปิดใน Notepad เห็น comma-separated
-- [ ] กด **Export PDF** → ดาวน์โหลด `.pdf` → เปิดใน browser เห็น PDF มีข้อมูล
-- [ ] DevTools → Network → request `/report` ต้องมี `Authorization: Bearer ...` header
+- [ ] DevTools → Network → request `GET /api/report` ต้องมี `Authorization: Bearer ...` header
 
 ### ProtectedRoute — ทดสอบ Guard
 
@@ -116,10 +128,20 @@ npm run dev
 | Request | Expected status | มี Authorization header? |
 |---------|----------------|------------------------|
 | `POST /api/login` | 200 | ไม่ต้องมี |
+| `POST /api/logout` | 200 | ✅ ต้องมี |
 | `GET /api/config` | 200 | ✅ ต้องมี |
 | `GET /api/tasks` | 200 | ✅ ต้องมี |
-| `GET /api/my-submission` | 200 หรือ 404 | ✅ ต้องมี |
+| `GET /api/my-submission` | 200 | ✅ ต้องมี |
+| `POST /api/my-submission` | 201 | ✅ ต้องมี |
+| `PUT /api/my-submission` | 200 | ✅ ต้องมี |
+| `GET /api/my-result` | 200 | ✅ ต้องมี |
 | `GET /api/candidates` | 200 | ✅ ต้องมี |
+| `GET /api/submissions` | 200 | ✅ ต้องมี |
+| `POST /api/submissions/:id/recheck` | 200 | ✅ ต้องมี |
+| `PUT /api/results/:id/confirm` | 200 | ✅ ต้องมี |
+| `GET /api/statistics/summary` | 200 | ✅ ต้องมี |
+| `GET /api/statistics/ranking` | 200 | ✅ ต้องมี |
+| `GET /api/statistics/status` | 200 | ✅ ต้องมี |
 | `GET /api/sessions` | 200 | ✅ ต้องมี |
 | `GET /api/report` | 200 | ✅ ต้องมี |
 
@@ -142,7 +164,6 @@ frontend/
     ├── router/
     │   └── ProtectedRoute.jsx
     ├── hooks/
-    │   └── useCountdown.js
     ├── components/
     │   ├── common/
     │   │   ├── Button.jsx
@@ -155,7 +176,8 @@ frontend/
     │   │   └── ResultCard.jsx
     │   ├── judge/
     │   │   ├── SessionControl.jsx
-    │   │   └── CandidateTable.jsx
+    │   │   ├── CandidateTable.jsx
+    │   │   └── SubmissionsTable.jsx
     │   └── manager/
     │       ├── SummaryCards.jsx
     │       ├── RankingTable.jsx
@@ -171,6 +193,25 @@ frontend/
             └── Dashboard.jsx
 ```
 
+## Build สำหรับ Production (ถ้าจำเป็น)
+
+ปกติใช้ `npm run dev` ในการแข่งขัน — แต่ถ้ากรรมการต้องการ production build:
+
+```bash
+# 1. แก้ .env ให้ใช้ LAN IP ก่อน
+VITE_API_URL=http://192.168.x.x:8080/api
+
+# 2. Build
+npm run build   # สร้างโฟลเดอร์ dist/
+
+# 3. ทดสอบ production build
+npm run preview # รันที่ localhost:3000 (preview mode)
+```
+
+:::warning แก้ .env ก่อน build เสมอ
+`npm run build` อ่าน `.env` ณ เวลา build — ถ้า build ด้วย `localhost` แล้วเอาไปรันบนเครื่องกรรมการ จะ error
+:::
+
 ## Common Problems ในห้องแข่งขัน
 
 | อาการ | สาเหตุที่พบบ่อย | วิธีแก้ |
@@ -178,6 +219,6 @@ frontend/
 | หน้าขาวทั้งหมด | Error ใน component | เปิด DevTools → Console → อ่าน error |
 | Login แล้วไม่ redirect | `HOME` map ไม่มี role นั้น | ตรวจ `data.data.role` ใน Network response |
 | Tasks ไม่แสดง | Backend ไม่รัน หรือ CORS | ตรวจ `.env` + รัน backend ก่อน |
-| Export failed | `pdfkit` ไม่ได้ install | `cd backend && npm install` |
+| Export failed | backend ไม่รัน หรือ session ไม่มีข้อมูล | รัน backend + ตรวจว่ามี confirmed result |
 | Tailwind ไม่มีผล | `index.css` ไม่มี `@import "tailwindcss"` | เพิ่มบรรทัดนี้เป็นบรรทัดแรก |
 | token หาย หลัง refresh | `useState` ไม่ใช้ lazy initializer | ตรวจ `AuthContext.jsx` — `useState(() => localStorage.getItem(...))` |

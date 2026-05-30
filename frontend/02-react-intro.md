@@ -1,6 +1,6 @@
 # บทที่ 2 — React คืออะไร
 
-> **บทนี้เตรียมอะไร:** ทำความเข้าใจแนวคิดหลักของ React ก่อนเริ่มเขียนโค้ดจริงในบทถัดไป — ไม่มีโค้ดในบทนี้
+> **บทนี้เตรียมอะไร:** แนวคิดหลักของ React ที่ต้องรู้ก่อนเขียนโค้ด — อ่านเป็น reference ควบคู่กับบทถัดไป ไม่จำเป็นต้องจำทั้งหมดก่อน เพราะจะเห็นซ้ำอีกครั้งเมื่อลงมือทำ
 
 ## React คืออะไร
 
@@ -74,6 +74,27 @@ function Greeting({ name, role }) {
 ```
 
 Props เป็น **read-only** — child ห้ามแก้ไข props ที่รับมา
+
+**`children` — props พิเศษ:**
+
+```jsx
+// การใช้งาน — ส่ง content เป็น children
+<Card>
+  <h2>Title</h2>    // ← ทั้งหมดนี้คือ "children" ของ Card
+  <p>Content</p>
+</Card>
+
+// Card component — รับ children เป็น props พิเศษ
+function Card({ children }) {
+  return (
+    <div className="bg-white rounded-xl p-6">
+      {children}    // แสดง content ที่ส่งมา
+    </div>
+  )
+}
+```
+
+`children` เป็น prop ที่ React ส่งให้อัตโนมัติ — ไม่ต้องส่งชื่อ prop เอง
 
 ### 4. State
 

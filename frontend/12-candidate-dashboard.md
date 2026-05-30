@@ -1,4 +1,4 @@
-# บทที่ 12 — Candidate Dashboard
+# บทที่ 13 — Candidate Dashboard
 
 > **Candidate** เห็นหน้านี้หลัง login — ดูสถานะ session, นาฬิกานับถอย, โจทย์, และ form ส่ง URL
 
@@ -16,7 +16,7 @@ src/
 
 ```jsx
 // pages/candidate/Dashboard.jsx — บทที่ 12
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import Card from '../../components/common/Card';
@@ -29,29 +29,29 @@ export default function CandidateDashboard() {
   const [tasks,      setTasks]      = useState([]);
   const [submission, setSubmission] = useState(null);
   const [result,     setResult]     = useState(null);
-
-  const fetchAll = useCallback(async () => {
-    try {
-      const [cfgRes, taskRes, subRes, resRes] = await Promise.all([
-        api.get('/config'),           // session ปัจจุบัน
-        api.get('/tasks'),            // รายการโจทย์
-        api.get('/my-submission'),    // submission ของตัวเอง
-        api.get('/my-result'),        // ผลคะแนนของตัวเอง
-      ]);
-      setSession(cfgRes.data.data);
-      setTasks(taskRes.data.data);
-      setSubmission(subRes.data.data);
-      setResult(resRes.data.data);
-    } catch (err) {
-      console.error('Failed to fetch data:', err);
-    }
-  }, []);
+  const [tick,       setTick]       = useState(0);  // counter สำหรับ trigger refresh
 
   useEffect(() => {
+    async function fetchAll() {
+      try {
+        const [cfgRes, taskRes, subRes, resRes] = await Promise.all([
+          api.get('/config'),           // session ปัจจุบัน
+          api.get('/tasks'),            // รายการโจทย์
+          api.get('/my-submission'),    // submission ของตัวเอง
+          api.get('/my-result'),        // ผลคะแนนของตัวเอง
+        ]);
+        setSession(cfgRes.data.data);
+        setTasks(taskRes.data.data);
+        setSubmission(subRes.data.data);
+        setResult(resRes.data.data);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+      }
+    }
     fetchAll();
     const id = setInterval(fetchAll, 5_000);  // refresh ทุก 5 วินาที
     return () => clearInterval(id);
-  }, [fetchAll]);
+  }, [tick]);  // tick เปลี่ยน → effect รันใหม่ → fetch ใหม่ทันที
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -116,7 +116,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/candidate" element={
             <ProtectedRoute role="candidate">
-              <CandidateDashboard />                              // [!code ++]
+              <CandidateDashboard /> {/* [!code ++] */}
             </ProtectedRoute>
           } />
           <Route path="/judge"   element={
@@ -148,22 +148,26 @@ npm run dev
 5. รอ 5 วินาที → DevTools Network → ต้องเห็น request `/config`, `/tasks`, `/my-submission`, `/my-result` ออกอีกครั้ง (polling)
 6. กด Logout → ต้องกลับไป `/login`
 
-## Pattern fetchAll อธิบาย
+## Pattern tick + fetchAll อธิบาย
 
 ```jsx
-const fetchAll = useCallback(async () => {
-  const [cfgRes, taskRes, subRes, resRes] = await Promise.all([...]);
-  //     ↑
-  //  Promise.all รัน 4 request พร้อมกัน — เร็วกว่ารัน await ทีละอัน 4 เท่า
-}, []);
-// dependency [] — fetchAll ไม่เปลี่ยนตลอด lifetime
+const [tick, setTick] = useState(0);
 
 useEffect(() => {
+  async function fetchAll() {
+    const [cfgRes, taskRes, subRes, resRes] = await Promise.all([...]);
+    //     ↑
+    //  Promise.all รัน 4 request พร้อมกัน — เร็วกว่ารัน await ทีละอัน 4 เท่า
+    setSession(...); setTasks(...); ...
+  }
   fetchAll();                              // fetch ทันทีตอน mount
   const id = setInterval(fetchAll, 5_000); // fetch ซ้ำทุก 5s
   return () => clearInterval(id);          // หยุด poll เมื่อ logout / unmount
-}, [fetchAll]);
+}, [tick]);
+// tick เปลี่ยน → effect ถูกสร้างใหม่ → fetchAll รันทันที + interval ใหม่
 ```
+
+เมื่อ SubmissionForm ส่งสำเร็จ → เรียก `setTick(t => t + 1)` → fetch ใหม่ทันที ไม่ต้องรอ interval 5 วินาที
 
 ## Common Errors
 

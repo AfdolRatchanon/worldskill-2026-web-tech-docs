@@ -37,7 +37,11 @@ const pool = require('../config/db');
 
 const PASS_THRESHOLD = 40;                           // คะแนนขั้นต่ำผ่าน
 
-async function getViewSession() {
+async function getViewSession(sessionId) {         // sessionId optional — manager เลือก session ได้
+  if (sessionId) {
+    const [rows] = await pool.execute('SELECT * FROM test_sessions WHERE id = ?', [sessionId]);
+    return rows[0] || null;
+  }
   const [rows] = await pool.execute(
     "SELECT * FROM test_sessions WHERE status IN ('open','closed') ORDER BY id DESC LIMIT 1"
   );
@@ -46,13 +50,13 @@ async function getViewSession() {
 
 async function getSummary(req, res) {
   try {
-    const session   = await getViewSession();
+    const session   = await getViewSession(req.query.session_id);  // ?session_id=N จาก SessionSelector
     const sessionId = session?.id ?? 0;
 
-    const [[{ count: total_candidates }]] = await pool.execute(
+    const [[{ count: total_candidates }]] = await pool.execute(  // [[{...}]] = pool คืน [rows,fields] → rows[0] → {count:N}
       "SELECT COUNT(*) AS count FROM users WHERE role = 'candidate'"
     );
-    const [[{ count: submitted }]] = await pool.execute(
+    const [[{ count: submitted }]] = await pool.execute(         // destructure ซ้อนเพื่อดึงค่าตรงๆ ในบรรทัดเดียว
       'SELECT COUNT(DISTINCT candidate_id) AS count FROM submissions WHERE session_id = ?',
       [sessionId]
     );
@@ -83,7 +87,7 @@ async function getSummary(req, res) {
 
 async function getStatus(req, res) {
   try {
-    const session   = await getViewSession();
+    const session   = await getViewSession(req.query.session_id);
     const sessionId = session?.id ?? 0;
 
     const [[row]] = await pool.execute(

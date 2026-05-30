@@ -44,7 +44,7 @@ async function getViewSession() {
 async function getCandidates(req, res) {
   try {
     const session   = await getViewSession();
-    const sessionId = session?.id ?? 0;             // ถ้าไม่มี session ใช้ 0 → LEFT JOIN ไม่มีข้อมูล
+    const sessionId = session?.id ?? 0;  // ?. = optional chaining (null-safe), ?? 0 = ถ้า null/undefined ให้ใช้ 0
 
     const [rows] = await pool.execute(`
       SELECT
@@ -59,8 +59,8 @@ async function getCandidates(req, res) {
         r.total_score,
         r.is_confirmed
       FROM users u
-      LEFT JOIN submissions s ON u.id = s.candidate_id AND s.session_id = ?
-      LEFT JOIN results     r ON u.id = r.candidate_id AND r.session_id = ?
+      LEFT JOIN submissions s ON u.id = s.candidate_id AND s.session_id = ?  -- LEFT: แสดงทุก user แม้ไม่มี submission
+      LEFT JOIN results     r ON u.id = r.candidate_id AND r.session_id = ?  -- LEFT: แสดงแม้ยังไม่มีคะแนน
       WHERE u.role = 'candidate'
       ORDER BY u.full_name ASC
     `, [sessionId, sessionId]);
@@ -73,6 +73,15 @@ async function getCandidates(req, res) {
 
 module.exports = { getCandidates };
 ```
+
+> **LEFT JOIN vs INNER JOIN** — ทำไมบทนี้ใช้ LEFT JOIN:
+>
+> | JOIN | ผลลัพธ์ |
+> |------|---------|
+> | `INNER JOIN submissions` | แสดงเฉพาะ candidate ที่ส่งงานแล้ว — คนที่ยังไม่ส่งหายไปจากรายชื่อ |
+> | `LEFT JOIN submissions` | แสดงทุก candidate เสมอ — คนที่ยังไม่ส่ง submission columns เป็น `null` |
+>
+> judge ต้องเห็น candidate ทุกคนรวมถึงคนที่ยังไม่ส่งงาน → ต้องใช้ LEFT JOIN
 
 **`app.js`**
 

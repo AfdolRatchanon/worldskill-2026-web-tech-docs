@@ -34,21 +34,21 @@ module.exports = router;
 // submissionsController.js — บทที่ 17 (partial)
 const pool = require('../config/db');
 
-async function getActiveSession() {                                       // helper ใช้ซ้ำทุก function
+async function getViewSession() {                                         // สำหรับ GET — ดึงเฉพาะ session ที่ open/closed
   const [rows] = await pool.execute(
-    'SELECT * FROM test_sessions ORDER BY id DESC LIMIT 1'
+    "SELECT * FROM test_sessions WHERE status IN ('open','closed') ORDER BY id DESC LIMIT 1"
   );
   return rows[0] || null;
 }
 
 async function getMySubmission(req, res) {
   try {
-    const session = await getActiveSession();
+    const session = await getViewSession();
     if (!session) return res.json({ success: true, data: null, meta: {} });
 
     const [rows] = await pool.execute(
       'SELECT * FROM submissions WHERE candidate_id = ? AND session_id = ?',
-      [req.user.id, session.id]                                           // req.user มาจาก authenticate
+      [req.user.id, session.id]  // req.user.id มาจาก authenticate ที่ decode JWT token แล้ว
     );
     res.json({ success: true, data: rows[0] || null, meta: {} });
   } catch {
@@ -58,6 +58,15 @@ async function getMySubmission(req, res) {
 
 module.exports = { getMySubmission };
 ```
+
+> **`getViewSession` vs `getActiveSession`** — ตลอดบทที่ 17–28 จะเจอ 2 helper นี้:
+>
+> | Helper | SQL | ใช้กับ |
+> |--------|-----|--------|
+> | `getViewSession()` | `WHERE status IN ('open','closed')` | GET ทุกตัว (read) |
+> | `getActiveSession()` | ไม่กรอง status — ล่าสุดเสมอ | POST / PUT (write) |
+>
+> เหตุผล: ถ้ามี session ใหม่ที่ยัง `waiting` อยู่ `getActiveSession()` จะได้ id ของ waiting session → query หา submission ไม่เจอ → candidate เห็น `null` ทั้งที่ส่งงานในรอบก่อนแล้ว
 
 **`app.js`**
 

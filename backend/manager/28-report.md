@@ -38,8 +38,8 @@ async function getReport(req, res) {
   try {
     const { format = 'json', session_id } = req.query;
 
-    const condition = session_id ? 'AND r.session_id = ?' : '';
-    const params    = session_id ? [session_id] : [];
+    const condition = session_id ? 'AND r.session_id = ?' : '';  // ถ้ามี session_id เพิ่ม condition, ถ้าไม่มีใช้ string ว่าง
+    const params    = session_id ? [session_id] : [];            // params ต้องตรงกับจำนวน ? ใน query
 
     const [rows] = await pool.execute(`
       SELECT
@@ -49,7 +49,7 @@ async function getReport(req, res) {
       FROM results r
       JOIN users       u ON r.candidate_id  = u.id
       JOIN submissions s ON r.submission_id = s.id
-      WHERE 1=1 ${condition}
+      WHERE 1=1 ${condition}   -- 1=1 เป็น true เสมอ ทำให้ต่อ AND ได้โดยไม่ต้องเช็คว่า condition แรกหรือเปล่า
       ORDER BY r.total_score DESC
     `, params);
 
@@ -97,6 +97,8 @@ app.use('/api', require('./routes/statistics'));
 app.use('/api', require('./routes/sessions'));
 app.use('/api', require('./routes/report'));        // [!code ++]
 
+
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
 ```
@@ -121,6 +123,8 @@ Authorization: Bearer <token ของ manager01>
 ```
 
 ต้องได้ไฟล์ CSV ที่มี header: `Username,Full Name,Frontend Score,Backend Score,Total Score,Confirmed`
+
+> ลำดับ `require('./routes/...')` สำหรับ routes ที่ path ไม่ซ้อนทับกัน สลับได้โดยไม่กระทบการทำงาน — ไฟล์ backend อ้างอิงอาจเรียง candidates ก่อน session แต่ผลลัพธ์เหมือนกัน
 
 > Pattern: Route → Controller → pool.execute() → res.json() — เหมือนทุก endpoint
 

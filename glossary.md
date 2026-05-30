@@ -97,9 +97,6 @@ devDependency ที่ watch file changes แล้ว restart server อัต
 **Payload (JWT)**
 ข้อมูลที่เก็บใน JWT token เช่น `{ id, username, role, full_name }` อ่านได้หลัง decode
 
-**pdfkit**
-npm package สร้างไฟล์ PDF บน Node.js เพิ่ม text, image, table ได้
-
 **Prepared Statement**
 SQL ที่ใช้ `?` แทนค่าจริง mysql2 จะ escape ค่าก่อน insert ป้องกัน SQL Injection
 

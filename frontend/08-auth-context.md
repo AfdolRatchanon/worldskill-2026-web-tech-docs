@@ -42,6 +42,7 @@ src/
 ```jsx
 // contexts/AuthContext.jsx — บทที่ 8
 import { createContext, useContext, useState } from 'react';
+import api from '../services/api';                           // สำหรับเรียก POST /logout
 
 const AuthContext = createContext(null);
 
@@ -57,19 +58,16 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(             // synchronous init — อ่าน localStorage ทันที
     () => localStorage.getItem('token')           // ป้องกัน race condition ตอน reload
   );
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('token');
-    return saved ? parseToken(saved) : null;
-  });
+  const [user,  setUser]  = useState(() => parseToken(localStorage.getItem('token')));
 
   function login(newToken) {                      // รับ token string ไม่ใช่ username/password
     localStorage.setItem('token', newToken);
     setToken(newToken);
-    const payload = JSON.parse(atob(newToken.split('.')[1]));
-    setUser(payload);
+    setUser(parseToken(newToken));               // ใช้ parseToken เดิม ไม่ต้อง decode เอง
   }
 
   function logout() {
+    api.post('/logout').catch(() => {}); // แจ้ง backend — non-blocking ไม่รอผล
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
@@ -123,7 +121,7 @@ import { AuthProvider } from './contexts/AuthContext';           // [!code ++]
 
 export default function App() {
   return (
-    <AuthProvider>                                               // [!code ++]
+    <AuthProvider> {/* [!code ++] */}
       <BrowserRouter>
         <Routes>
           <Route path="/login"     element={<div>Login Page — Coming Soon</div>} />
@@ -133,7 +131,7 @@ export default function App() {
           <Route path="*"          element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
-    </AuthProvider>                                              // [!code ++]
+    </AuthProvider> {/* [!code ++] */}
   );
 }
 ```
@@ -153,7 +151,7 @@ user.role       // เช่น "judge"
 user.full_name  // เช่น "Judge User"
 token           // JWT string (ใช้ตรวจสอบว่า login อยู่ไหม)
 login(token)    // เรียกหลัง POST /login สำเร็จ
-logout()        // ลบ token + redirect
+logout()        // POST /api/logout → ลบ token → component re-render
 ```
 
 ## ทดสอบ
@@ -166,10 +164,12 @@ npm run dev
 
 **ทดสอบ login state คงอยู่หลัง refresh:**
 1. เปิด DevTools → Application → Local Storage
-2. เพิ่ม key: `token` value: ใส่ JWT จริงจาก backend (POST /api/login ผ่าน terminal หรือ Postman แล้วคัดลอก token)
+2. เพิ่ม key: `token` value: ใส่ JWT จริงจาก backend (POST /api/login ผ่าน Postman แล้วคัดลอก token)
 3. Refresh หน้า → ต้องไม่กลับไป login (AuthProvider อ่าน localStorage ทันทีตอน init)
 
 **DevTools → Console:** ต้องไม่มี error ใดๆ
+
+> `logout()` เรียก `POST /api/logout` ก่อน clear token — ทดสอบได้ในบทที่ 12, 14, 15 เมื่อมีปุ่ม Logout จริง โดย DevTools → Network → ต้องเห็น `POST /api/logout` เมื่อกด Logout
 
 :::tip ทดสอบง่ายๆ ว่า user ถูกอ่านหรือเปล่า
 เพิ่ม `console.log` ชั่วคราวใน component ใดๆ:

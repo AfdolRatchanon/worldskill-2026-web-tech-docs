@@ -36,9 +36,9 @@ const pool = require('../config/db');
 async function getConfig(req, res) {
   try {
     const [rows] = await pool.execute(
-      'SELECT * FROM test_sessions ORDER BY id DESC LIMIT 1'  // session ล่าสุด
+      'SELECT * FROM test_sessions ORDER BY id DESC LIMIT 1'  // ดึงทุก status รวม waiting เพื่อแสดงสถานะจริง
     );
-    res.json({ success: true, data: rows[0] || null, meta: {} });
+    res.json({ success: true, data: rows[0] || null, meta: {} });  // null ถ้ายังไม่มี session เลยในระบบ
   } catch {
     res.status(500).json({ success: false, message: 'Server error' });
   }

@@ -63,7 +63,15 @@ SELECT COUNT(*) FROM users;
 EXIT;
 ```
 
-**2. สร้างไฟล์ `backend/.env`**
+**2. หา IP เครื่องตัวเองก่อน**
+
+```bash
+ipconfig
+```
+
+จด IPv4 Address มาใช้ เช่น `192.168.1.100`
+
+**3. สร้างไฟล์ `backend/.env`**
 
 ```
 DB_HOST=localhost
@@ -72,24 +80,29 @@ DB_USER=root
 DB_PASSWORD=<รหัสผ่านตามโจทย์>
 DB_NAME=worldskill2026
 JWT_SECRET=<string ลับตามโจทย์>
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://192.168.x.x:3000
 PORT=8080
 ```
 
-**3. ติดตั้ง packages**
+:::warning FRONTEND_URL ต้องใช้ LAN IP — ไม่ใช่ localhost
+กรรมการเข้า frontend ผ่าน IP จริงของเครื่อง เช่น `http://192.168.1.100:3000`
+ถ้าใช้ `localhost` → CORS บล็อก request → ทุก API call ล้มเหลว
+:::
+
+**4. ติดตั้ง packages**
 
 ```bash
 cd backend
 npm install
 ```
 
-**4. รัน Seed (ถ้าโจทย์กำหนด)**
+**5. รัน Seed (ถ้าโจทย์กำหนด)**
 
 ```bash
 npm run seed
 ```
 
-**5. รัน Server**
+**6. รัน Server**
 
 ```bash
 npm run dev
@@ -100,7 +113,7 @@ npm run dev
 Backend running on http://localhost:8080
 ```
 
-**6. ทดสอบ Login ด้วย Postman**
+**7. ทดสอบ Login ด้วย Postman**
 
 ```
 POST http://localhost:8080/api/login
@@ -109,7 +122,7 @@ Body: { "username": "judge01", "password": "judge123" }
 
 ต้องได้ `token` กลับมา
 
-**7. ทดสอบ Endpoints ตาม Marking Scheme**
+**8. ทดสอบ Endpoints ตาม Marking Scheme**
 
 ทดสอบทีละ endpoint ตามลำดับในเอกสารโจทย์ — ใช้ token จากขั้นตอน 6
 

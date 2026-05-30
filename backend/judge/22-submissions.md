@@ -23,13 +23,17 @@ router.put('/my-submission',  authenticate, authorize('candidate'), ctrl.updateS
 router.get('/submissions',    authenticate, authorize('judge'),     ctrl.getAllSubmissions); // [!code ++]
 ```
 
+:::tip
+เปิดไฟล์ `submissionsController.js` ที่มีอยู่แล้ว แล้ว**เพิ่มต่อท้าย** — ไม่ต้องพิมพ์ฟังก์ชันเดิมใหม่
+:::
+
 **`controllers/submissionsController.js`** — เพิ่ม `getAllSubmissions`
 
 ```js
 // submissionsController.js — บทที่ 22 เพิ่ม getAllSubmissions
 async function getAllSubmissions(req, res) {                                  // [!code ++]
   try {                                                                      // [!code ++]
-    const session = await getActiveSession();                                // [!code ++]
+    const session = await getViewSession();                                  // [!code ++]
     if (!session) return res.json({ success: true, data: [], meta: {} });   // [!code ++]
                                                                              // [!code ++]
     const [rows] = await pool.execute(`                                      // [!code ++]

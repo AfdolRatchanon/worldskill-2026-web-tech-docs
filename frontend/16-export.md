@@ -1,6 +1,6 @@
-# บทที่ 16 — Export
+# บทที่ 17 — Export
 
-> **Manager** ดาวน์โหลดรายงานได้ 3 format: JSON, CSV, PDF — ส่ง JWT header ผ่าน axios แล้วดาวน์โหลดผ่าน Blob URL
+> **Manager** ดาวน์โหลดรายงานได้ 2 format: JSON, CSV — ส่ง JWT header ผ่าน axios แล้วดาวน์โหลดผ่าน Blob URL
 
 ## ปัญหา — ดาวน์โหลดไฟล์ที่ต้อง Auth
 
@@ -50,14 +50,14 @@ export default function ExportButtons({ sessionId }) {
     try {
       const params = sessionId ? `?format=${format}&session_id=${sessionId}` : `?format=${format}`;
       const res = await api.get(`/report${params}`, {
-        responseType: format === 'json' ? 'json' : 'blob',  // json ≠ blob
+        responseType: format === 'json' ? 'json' : 'blob',  // json ≠ blob — ต้องแยก
       });
 
       let blob;
       if (format === 'json') {
         blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
       } else {
-        blob = res.data;  // CSV และ PDF เป็น binary ตรงๆ
+        blob = res.data;  // CSV เป็น binary ตรงๆ
       }
 
       const url = URL.createObjectURL(blob);
@@ -75,7 +75,6 @@ export default function ExportButtons({ sessionId }) {
     <div className="flex gap-2 flex-wrap">
       <Button variant="ghost" onClick={() => download('json')}>Export JSON</Button>
       <Button variant="ghost" onClick={() => download('csv')}>Export CSV</Button>
-      <Button variant="ghost" onClick={() => download('pdf')}>Export PDF</Button>
     </div>
   );
 }
@@ -83,7 +82,7 @@ export default function ExportButtons({ sessionId }) {
 
 :::warning JSON ต้องใช้ responseType 'json' ไม่ใช่ 'blob'
 - `format === 'json'` → `responseType: 'json'` → axios parse เป็น object → แปลงเป็น Blob เอง
-- `format === 'csv'` / `'pdf'` → `responseType: 'blob'` → axios คืน Blob ตรงๆ
+- `format === 'csv'` → `responseType: 'blob'` → axios คืน Blob ตรงๆ
 
 ถ้าใช้ `'blob'` กับ JSON จะได้ string เป็น `[object Object]` แทนที่จะเป็น JSON จริง
 :::
@@ -105,8 +104,8 @@ import ExportButtons from '../../components/manager/ExportButtons';  // [!code +
 <Card>
   <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
     <h2 className="font-semibold text-gray-900">Ranking</h2>
-    <ExportButtons sessionId={selectedId} />            // [!code ++]
-    <p className="text-sm text-gray-400">Export — จะเพิ่มในบทที่ 16</p>  // [!code --]
+    <ExportButtons sessionId={selectedId} /> {/* [!code ++] */}
+    <p className="text-sm text-gray-400">Export — จะเพิ่มในบทที่ 16</p> {/* [!code --] */}
   </div>
   <RankingTable ranking={ranking} passThreshold={status?.pass_threshold} />
 </Card>
@@ -160,7 +159,6 @@ npm run dev
 3. กด **Export JSON** → browser ดาวน์โหลดไฟล์ `report-session1.json`
 4. เปิดไฟล์ → ต้องเห็น JSON มีข้อมูล ranking
 5. กด **Export CSV** → ดาวน์โหลด `.csv` → เปิดใน Notepad ต้องเห็น comma-separated data
-6. กด **Export PDF** → ดาวน์โหลด `.pdf` → เปิดใน browser ต้องเห็น PDF มีข้อมูล
 
 :::tip ทดสอบ JWT ส่งครบ
 เปิด DevTools → Network → คลิก request `/report` → ดู Request Headers → ต้องมี `Authorization: Bearer ...`
@@ -184,8 +182,6 @@ frontend/
     │   └── api.js
     ├── router/
     │   └── ProtectedRoute.jsx
-    ├── hooks/
-    │   └── useCountdown.js
     ├── components/
     │   ├── common/
     │   │   ├── Button.jsx
@@ -198,7 +194,8 @@ frontend/
     │   │   └── ResultCard.jsx
     │   ├── judge/
     │   │   ├── SessionControl.jsx
-    │   │   └── CandidateTable.jsx
+    │   │   ├── CandidateTable.jsx
+    │   │   └── SubmissionsTable.jsx
     │   └── manager/
     │       ├── SummaryCards.jsx
     │       ├── RankingTable.jsx
@@ -218,6 +215,6 @@ frontend/
 
 | Error | สาเหตุ | วิธีแก้ |
 |-------|--------|---------|
-| Export failed | backend ไม่รัน หรือ `pdfkit` ไม่ได้ install | รัน `cd backend && npm install` แล้วรัน server |
+| Export failed | backend ไม่รัน | รัน `cd backend && npm run dev` แล้วลองใหม่ |
 | ไฟล์ JSON เป็น `[object Object]` | ใช้ `responseType: 'blob'` กับ JSON | ใช้ `responseType: 'json'` แล้วแปลงเป็น Blob ด้วย `JSON.stringify` |
 | ดาวน์โหลดแล้วไฟล์เปิดไม่ได้ | `URL.revokeObjectURL` รันก่อนดาวน์โหลดเสร็จ | `.revokeObjectURL` อยู่หลัง `.click()` แล้ว (ถูกต้อง) |

@@ -43,6 +43,10 @@ useEffect(() => {
 
 ## useCallback คืออะไร
 
+:::info โปรเจ็คนี้ไม่ได้ใช้ useCallback
+Dashboard ในระบบนี้ใช้ **tick pattern** แทน (ดูหัวข้อ "Pattern Polling จริง" ด้านล่าง) — รู้จัก useCallback ไว้เพื่ออ่าน code โปรเจ็คอื่นได้
+:::
+
 `useCallback` ทำให้ฟังก์ชัน **ไม่ถูกสร้างใหม่** ทุก render — จำเป็นเมื่อต้องใส่ฟังก์ชันเป็น dependency ของ `useEffect`
 
 **ปัญหาถ้าไม่ใช้ useCallback:**
@@ -92,16 +96,16 @@ export default function App() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
         <h1 className="text-2xl font-bold text-gray-900">WorldSkill 2026</h1>
         <p className="text-gray-400 text-sm mt-2">Test Submission Management System</p>
-        <p className="mt-4 text-center text-gray-500 font-mono">{time}</p>  // [!code ++]
-        <div className="mt-6 text-center">                                   // [!code --]
-          <p className="text-4xl font-bold text-blue-600">{count}</p>       // [!code --]
-          <button                                                             // [!code --]
+        <p className="mt-4 text-center text-gray-500 font-mono">{time}</p> {/* [!code ++] */}
+        <div className="mt-6 text-center"> {/* [!code --] */}
+          <p className="text-4xl font-bold text-blue-600">{count}</p> {/* [!code --] */}
+          <button {/* [!code --] */}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"  // [!code --]
             onClick={() => setCount(count + 1)}                             // [!code --]
-          >                                                                   // [!code --]
-            Click me                                                         // [!code --]
-          </button>                                                           // [!code --]
-        </div>                                                               // [!code --]
+          > {/* [!code --] */}
+            Click me
+          </button> {/* [!code --] */}
+        </div> {/* [!code --] */}
       </div>
     </div>
   );
@@ -122,39 +126,47 @@ npm run dev
 
 **DevTools → Console:** ต้องไม่มี error หรือ warning ใดๆ
 
-## Pattern Polling จริง (ที่จะใช้ใน Dashboard)
+## Pattern Polling จริง (ที่ใช้ใน Dashboard)
+
+Dashboard ทุกหน้าใช้ **tick counter** เป็น dependency ของ `useEffect` แทนที่จะใส่ฟังก์ชัน fetch ลงใน dependency array โดยตรง:
 
 ```jsx
-const fetchAll = useCallback(async () => {
-  try {
-    const [res1, res2] = await Promise.all([
-      api.get('/endpoint1'),
-      api.get('/endpoint2'),
-    ]);
-    setData1(res1.data.data);
-    setData2(res2.data.data);
-  } catch (err) {
-    console.error('Failed to fetch data:', err);
-  }
-}, []);   // ไม่มี dependency — fetchAll คงที่ตลอด
+const [tick, setTick] = useState(0);  // counter สำหรับ trigger refresh
 
 useEffect(() => {
+  async function fetchAll() {         // ประกาศ async function ภายใน effect
+    try {
+      const [res1, res2] = await Promise.all([
+        api.get('/endpoint1'),
+        api.get('/endpoint2'),
+      ]);
+      setData1(res1.data.data);
+      setData2(res2.data.data);
+    } catch (err) {
+      console.error('Failed to fetch data:', err);
+    }
+  }
   fetchAll();                               // fetch ครั้งแรกทันที
   const id = setInterval(fetchAll, 5_000); // poll ทุก 5 วินาที
   return () => clearInterval(id);          // cleanup เมื่อ unmount
-}, [fetchAll]);
+}, [tick]);  // ← เปลี่ยนจาก [fetchAll] มาเป็น [tick]
+
+// เมื่อ child component ทำ action (เช่น submit, recheck) → เรียก
+// setTick(t => t + 1) เพื่อ trigger fetch ใหม่ทันที
 ```
 
-:::tip ทำไมต้อง useCallback?
-ถ้า `fetchAll` ถูกสร้างใหม่ทุก render → `useEffect` จะ detect dependency เปลี่ยน → รัน effect ใหม่ → fetch loop ไม่หยุด
+:::tip ทำไมใช้ tick แทนการใส่ fetchAll ใน dependency?
+ถ้าประกาศ `fetchAll` ข้างนอก `useEffect` → React จะเห็นว่ามันสร้างใหม่ทุก render → `useEffect` รัน loop ไม่หยุด
 
-`useCallback` ทำให้ `fetchAll` เป็น reference เดิมตลอด → `useEffect` รันแค่ครั้งแรก
+แก้ได้ 2 วิธี:
+1. **tick pattern** (ใช้ในโปรเจ็คนี้) — ประกาศ fetchAll ภายใน effect ไม่ต้องใส่ใน dependency, ใช้ `tick` เป็นตัว trigger แทน — เข้าใจง่าย
+2. **useCallback** — ห่อฟังก์ชันด้วย `useCallback` เพื่อให้ reference คงที่ — เป็น pattern ที่พบบ่อยในโปรเจ็คทั่วไป
 :::
 
 ## Common Errors
 
 | Error | สาเหตุ | วิธีแก้ |
 |-------|--------|---------|
-| Fetch loop ไม่หยุด | `useEffect` dependency มีฟังก์ชันที่สร้างใหม่ทุก render | ห่อฟังก์ชันด้วย `useCallback` |
+| Fetch loop ไม่หยุด | ประกาศ async function ข้างนอก `useEffect` แล้วใส่เป็น dependency | ย้าย function ไว้ภายใน `useEffect` หรือใช้ tick pattern |
 | Memory leak warning | ไม่มี cleanup function | เพิ่ม `return () => clearInterval(id)` |
 | Effect ไม่รัน | dependency array ผิด หรือลืมใส่ | ตรวจ dependency array |

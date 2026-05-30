@@ -190,6 +190,78 @@ npm run dev
 `npm run dev` รัน Vite dev server — บันทึกไฟล์แล้ว browser อัปเดตทันทีโดยไม่ต้อง refresh
 :::
 
+## JSX ต่างจาก HTML ยังไง
+
+JSX คือ HTML ที่เขียนใน JavaScript — มีกฎต่างจาก HTML นิดหน่อย:
+
+| HTML | JSX | เหตุผล |
+|------|-----|--------|
+| `class="..."` | `className="..."` | `class` เป็น keyword ใน JavaScript |
+| `for="..."` | `htmlFor="..."` | `for` เป็น keyword ใน JavaScript |
+| `<img>` | `<img />` | ทุก tag ต้องปิดเสมอ |
+| `<input>` | `<input />` | เหมือนกัน |
+| หลาย element | ห่อด้วย `<div>` หรือ `<>...</>` | return ได้แค่ element เดียว |
+
+```jsx
+// ✅ JSX ถูก
+return (
+  <>
+    <h1 className="text-blue-600">WorldSkill 2026</h1>
+    <p>Welcome</p>
+  </>
+)
+
+// ❌ JSX ผิด — return หลาย element โดยไม่ห่อ
+return (
+  <h1>WorldSkill 2026</h1>
+  <p>Welcome</p>
+)
+```
+
+**Expression ใน JSX ใช้ `{}`:**
+
+```jsx
+const name = 'Alice'
+return <p>Hello {name}</p>          // ✅ ใส่ตัวแปรได้
+return <p>Hello {2 + 3}</p>         // ✅ คำนวณได้
+return <p>Hello {isOpen ? 'Open' : 'Closed'}</p>  // ✅ ternary ได้
+return <p>Hello {/* comment */}</p> // ✅ comment ใช้ {/* */}
+```
+
+## import / export ต่างจาก Backend
+
+Backend ใช้ CommonJS (`require` / `module.exports`) — Frontend ใช้ ES Modules (`import` / `export`):
+
+```js
+// Backend (CommonJS)
+const express = require('express')
+module.exports = router
+
+// Frontend (ES Modules)
+import { useState } from 'react'
+export default function App() { ... }
+export const HOME = { ... }   // named export
+```
+
+ทั้งสองทำสิ่งเดียวกัน แต่ syntax ต่างกัน — อย่าปนกัน
+
+## React.StrictMode รัน Effect สองครั้ง
+
+`main.jsx` ห่อ App ด้วย `<React.StrictMode>` — ใน development mode React จะรัน `useEffect` **2 ครั้ง** เพื่อช่วย detect bug
+
+```jsx
+// main.jsx
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>   // ← ทำให้ effect รัน 2 ครั้งใน dev
+    <App />
+  </React.StrictMode>
+)
+```
+
+:::tip ถ้าเห็น API call ออก 2 ครั้งใน Network tab
+ไม่ใช่ bug — เป็น StrictMode ที่ทำงานปกติ ใน production build จะรัน 1 ครั้งตามปกติ
+:::
+
 ## Common Errors
 
 | Error | สาเหตุ | วิธีแก้ |
@@ -198,3 +270,4 @@ npm run dev
 | `Error: listen EADDRINUSE :::3000` | port 3000 ถูกใช้อยู่ | ปิดโปรแกรมอื่นที่ใช้ port 3000 |
 | Tailwind class ไม่มีผล | `index.css` ยังใช้ syntax เก่า | แทนที่ด้วย `@import "tailwindcss";` บรรทัดเดียว |
 | `VITE_API_URL` เป็น undefined | ไม่มีไฟล์ `.env` | สร้างไฟล์ `.env` ที่ root ของ `frontend/` |
+| หลาย element return พร้อมกัน | ลืมห่อด้วย `<>...</>` | ใช้ Fragment `<>` ห่อ elements ทั้งหมด |

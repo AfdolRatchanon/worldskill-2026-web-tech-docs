@@ -62,28 +62,28 @@ export default function App() {
       .catch(err => console.error(err));     // [!code --]
   }, []);                                    // [!code --]
 
-  return (                                   // [!code --]
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">  // [!code --]
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">  // [!code --]
-        <h1 className="text-2xl font-bold text-gray-900">WorldSkill 2026</h1>    // [!code --]
-        <p className="text-gray-400 text-sm mt-2">Test Submission Management System</p>  // [!code --]
-        <ul className="mt-4 text-sm text-gray-600 space-y-1">                    // [!code --]
-          {tasks.map(t => <li key={t.id}>{t.title}</li>)}                       // [!code --]
-        </ul>                                                                     // [!code --]
-      </div>                                                                      // [!code --]
-    </div>                                                                        // [!code --]
-  );                                                                              // [!code --]
-  return (                                                                        // [!code ++]
-    <BrowserRouter>                                                               // [!code ++]
-      <Routes>                                                                    // [!code ++]
-        <Route path="/login"     element={<div>Login Page — Coming Soon</div>} />      // [!code ++]
-        <Route path="/candidate" element={<div>Candidate Dashboard — Coming Soon</div>} /> // [!code ++]
-        <Route path="/judge"     element={<div>Judge Dashboard — Coming Soon</div>} />  // [!code ++]
-        <Route path="/manager"   element={<div>Manager Dashboard — Coming Soon</div>} /> // [!code ++]
-        <Route path="*"          element={<Navigate to="/login" replace />} />         // [!code ++]
-      </Routes>                                                                   // [!code ++]
-    </BrowserRouter>                                                              // [!code ++]
-  );                                                                              // [!code ++]
+  return ( // [!code --]
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center"> {/* [!code --] */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8"> {/* [!code --] */}
+        <h1 className="text-2xl font-bold text-gray-900">WorldSkill 2026</h1> {/* [!code --] */}
+        <p className="text-gray-400 text-sm mt-2">Test Submission Management System</p> {/* [!code --] */}
+        <ul className="mt-4 text-sm text-gray-600 space-y-1"> {/* [!code --] */}
+          {tasks.map(t => <li key={t.id}>{t.title}</li>)} {/* [!code --] */}
+        </ul> {/* [!code --] */}
+      </div> {/* [!code --] */}
+    </div> {/* [!code --] */}
+  ); // [!code --]
+  return ( // [!code ++]
+    <BrowserRouter> {/* [!code ++] */}
+      <Routes> {/* [!code ++] */}
+        <Route path="/login"     element={<div>Login Page — Coming Soon</div>} /> {/* [!code ++] */}
+        <Route path="/candidate" element={<div>Candidate Dashboard — Coming Soon</div>} /> {/* [!code ++] */}
+        <Route path="/judge"     element={<div>Judge Dashboard — Coming Soon</div>} /> {/* [!code ++] */}
+        <Route path="/manager"   element={<div>Manager Dashboard — Coming Soon</div>} /> {/* [!code ++] */}
+        <Route path="*"          element={<Navigate to="/login" replace />} /> {/* [!code ++] */}
+      </Routes> {/* [!code ++] */}
+    </BrowserRouter> {/* [!code ++] */}
+  ); // [!code ++]
 }
 ```
 

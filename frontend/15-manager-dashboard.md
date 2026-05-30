@@ -1,4 +1,4 @@
-# บทที่ 15 — Manager Dashboard
+# บทที่ 16 — Manager Dashboard
 
 > **Manager** เห็นหน้านี้หลัง login — ดู statistics, ranking, เลือก session ที่ต้องการดู — read-only ทั้งหมด
 
@@ -22,20 +22,22 @@ src/
 
 ```jsx
 // components/manager/SummaryCards.jsx — บทที่ 15
-const cards = (s) => [
-  { label: 'Total Candidates', value: s?.total_candidates ?? '—', color: 'text-blue-600'   },
-  { label: 'Submitted',        value: s?.submitted        ?? '—', color: 'text-yellow-600' },
-  { label: 'Confirmed',        value: s?.confirmed        ?? '—', color: 'text-green-600'  },
-  { label: 'Average Score',    value: s?.average_score    ?? '—', color: 'text-purple-600' },
+const CARDS = [
+  { label: 'Total Candidates', value: (s) => s?.total_candidates, color: 'text-blue-600'   },
+  { label: 'Submitted',        value: (s) => s?.submitted,        color: 'text-yellow-600' },
+  { label: 'Confirmed',        value: (s) => s?.confirmed,        color: 'text-green-600'  },
+  { label: 'Average Score',    value: (s) => s?.average_score,    color: 'text-purple-600' },
 ];
+// CARDS เป็น array คงที่ข้างนอก component — ไม่ต้องสร้างใหม่ทุก render
+// value เป็นฟังก์ชัน (s) => ... รับ summary มาคืนค่าตัวเลข
 
 export default function SummaryCards({ summary }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {cards(summary).map((c) => (
-        <div key={c.label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
-          <p className={`text-3xl font-bold ${c.color}`}>{c.value}</p>
-          <p className="text-xs text-gray-400 mt-1">{c.label}</p>
+      {CARDS.map(({ label, value, color }) => (
+        <div key={label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <p className={`text-3xl font-bold ${color}`}>{value(summary) ?? '—'}</p>
+          <p className="text-xs text-gray-400 mt-1">{label}</p>
         </div>
       ))}
     </div>
@@ -53,18 +55,20 @@ export default function SummaryCards({ summary }) {
 
 ```jsx
 // components/manager/RankingTable.jsx — บทที่ 15
+import Badge from '../common/Badge';
+
 export default function RankingTable({ ranking, passThreshold = 40 }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-100 text-left">
-            <th className="py-3 px-4 text-gray-400 font-medium">Rank</th>
-            <th className="py-3 px-4 text-gray-400 font-medium">Candidate</th>
-            <th className="py-3 px-4 text-gray-400 font-medium text-right">Frontend</th>
-            <th className="py-3 px-4 text-gray-400 font-medium text-right">Backend</th>
-            <th className="py-3 px-4 text-gray-400 font-medium text-right">Total</th>
-            <th className="py-3 px-4 text-gray-400 font-medium">Result</th>
+            <th scope="col" className="py-3 px-4 text-gray-400 font-medium">Rank</th>
+            <th scope="col" className="py-3 px-4 text-gray-400 font-medium">Candidate</th>
+            <th scope="col" className="py-3 px-4 text-gray-400 font-medium text-right">Frontend</th>
+            <th scope="col" className="py-3 px-4 text-gray-400 font-medium text-right">Backend</th>
+            <th scope="col" className="py-3 px-4 text-gray-400 font-medium text-right">Total</th>
+            <th scope="col" className="py-3 px-4 text-gray-400 font-medium">Result</th>
           </tr>
         </thead>
         <tbody>
@@ -79,13 +83,7 @@ export default function RankingTable({ ranking, passThreshold = 40 }) {
               <td className="py-3 px-4 text-right">{r.backend_score}</td>
               <td className="py-3 px-4 text-right font-bold">{r.total_score}</td>
               <td className="py-3 px-4">
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                  r.total_score >= passThreshold
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
-                }`}>
-                  {r.total_score >= passThreshold ? 'Pass' : 'Fail'}
-                </span>
+                <Badge status={r.total_score >= passThreshold ? 'pass' : 'fail'} />
               </td>
             </tr>
           ))}
@@ -146,7 +144,7 @@ export default function SessionSelector({ sessions, selectedId, onChange }) {
 
 ```jsx
 // pages/manager/Dashboard.jsx — บทที่ 15
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import Card from '../../components/common/Card';
@@ -164,45 +162,47 @@ export default function ManagerDashboard() {
   const [ranking,    setRanking]    = useState([]);
   const [status,     setStatus]     = useState(null);
 
-  const fetchSessions = useCallback(async () => {
-    try {
-      const res  = await api.get('/sessions');
-      const list = res.data.data;
-      setSessions(list);
-      setSelectedId((prev) => (prev === null && list.length > 0 ? list[0].id : prev)); // auto-select ครั้งแรก
-    } catch (err) {
-      console.error('Failed to load sessions:', err);
-    }
-  }, []);
-
+  // Effect 1 — โหลด session list, รันครั้งเดียวตอน mount
   useEffect(() => {
+    async function fetchSessions() {
+      try {
+        const res  = await api.get('/sessions');
+        const list = res.data.data;
+        setSessions(list);
+        setSelectedId((prev) => (prev === null && list.length > 0 ? list[0].id : prev));
+        // setState(prev=>) = functional updater: อ่าน state ล่าสุดแทน closure เก่า
+        // prev===null ครั้งแรก → เลือก session แรก, ครั้งต่อมาคง selectedId ที่ user เลือกไว้
+      } catch (err) {
+        console.error('Failed to load sessions:', err);
+      }
+    }
     fetchSessions();
     const id = setInterval(fetchSessions, 5_000);
     return () => clearInterval(id);
-  }, [fetchSessions]);
+  }, []);  // [] = รันครั้งเดียว — sessions ไม่ขึ้นกับ selectedId
 
-  const fetchStats = useCallback(async () => {
-    if (!selectedId) return;
-    try {
-      const params = `?session_id=${selectedId}`;
-      const [sumRes, rankRes, statusRes] = await Promise.all([
-        api.get(`/statistics/summary${params}`),
-        api.get(`/statistics/ranking${params}`),
-        api.get(`/statistics/status${params}`),
-      ]);
-      setSummary(sumRes.data.data);
-      setRanking(rankRes.data.data);
-      setStatus(statusRes.data.data);
-    } catch (err) {
-      console.error('Failed to fetch stats:', err);
-    }
-  }, [selectedId]);  // re-run เมื่อ selectedId เปลี่ยน
-
+  // Effect 2 — โหลด stats, รันใหม่เมื่อ selectedId เปลี่ยน
   useEffect(() => {
+    if (!selectedId) return;
+    async function fetchStats() {
+      try {
+        const params = `?session_id=${selectedId}`;
+        const [sumRes, rankRes, statusRes] = await Promise.all([
+          api.get(`/statistics/summary${params}`),
+          api.get(`/statistics/ranking${params}`),
+          api.get(`/statistics/status${params}`),
+        ]);
+        setSummary(sumRes.data.data);
+        setRanking(rankRes.data.data);
+        setStatus(statusRes.data.data);
+      } catch (err) {
+        console.error('Failed to fetch stats:', err);
+      }
+    }
     fetchStats();
     const id = setInterval(fetchStats, 5_000);
     return () => clearInterval(id);
-  }, [fetchStats]);
+  }, [selectedId]);  // selectedId เปลี่ยน → effect สร้างใหม่ → fetch session ที่เลือก
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -284,7 +284,7 @@ export default function App() {
           } />
           <Route path="/manager" element={
             <ProtectedRoute role="manager">
-              <ManagerDashboard />                                // [!code ++]
+              <ManagerDashboard /> {/* [!code ++] */}
             </ProtectedRoute>
           } />
           <Route path="*" element={<Navigate to="/login" replace />} />
@@ -314,4 +314,4 @@ npm run dev
 |-------|--------|---------|
 | Sessions ว่าง | ยังไม่มี session ใน DB | Login เป็น judge → Open Session ก่อน |
 | Ranking ว่าง | ยังไม่มี confirmed result | Judge ต้อง Re-check + Confirm ก่อน |
-| `fetchStats` ไม่รัน | `selectedId` เป็น null | `fetchSessions` auto-select ครั้งแรกอัตโนมัติ |
+| Stats ไม่โหลด | `selectedId` เป็น null | `fetchSessions` auto-select session แรกอัตโนมัติเมื่อโหลดครั้งแรก |

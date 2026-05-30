@@ -1,4 +1,4 @@
-# บทที่ 9 — Login Page
+# บทที่ 10 — Login Page
 
 > **Candidate, Judge, Manager** เห็นหน้านี้ก่อน — กรอก username/password → POST /api/login → navigate ไปหน้า dashboard ตาม role
 
@@ -19,8 +19,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
-
-const HOME = { candidate: '/candidate', judge: '/judge', manager: '/manager' };
+import { HOME } from '../router/ProtectedRoute';  // ใช้ HOME เดียวกับ ProtectedRoute
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -108,9 +107,14 @@ export default function Login() {
 }
 ```
 
-:::tip ทำไม navigate ใช้ data.data.role ไม่ใช่ user.role
-ตอน `handleSubmit` รัน ยังไม่ได้เรียก `login()` เลย — `user` ใน context ยังเป็น null
-จึงใช้ `data.data.role` จาก response โดยตรงสำหรับ redirect
+:::warning ทำไม navigate ใช้ `data.data.role` ไม่ใช่ `user.role`
+React `setState` เป็น **async** — เรียก `login(token)` แล้ว `user` ใน context ยังไม่อัปเดตทันทีในรอบ render เดียวกัน
+
+```jsx
+login(data.data.token);              // ← setState ภายใน (ยังไม่ re-render)
+navigate(HOME[user?.role]);          // ❌ user ยังเป็น null อยู่ → navigate ผิด
+navigate(HOME[data.data.role]);      // ✅ อ่านจาก response ตรงๆ ไม่ขึ้นกับ state
+```
 :::
 
 ## อัปเดต App.jsx — เพิ่ม Route /login จริง
@@ -126,8 +130,8 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login"     element={<Login />} />        // [!code ++]
-          <Route path="/login"     element={<div>Login Page — Coming Soon</div>} />  // [!code --]
+          <Route path="/login"     element={<Login />} /> {/* [!code ++] */}
+          <Route path="/login"     element={<div>Login Page — Coming Soon</div>} /> {/* [!code --] */}
           <Route path="/candidate" element={<div>Candidate Dashboard — Coming Soon</div>} />
           <Route path="/judge"     element={<div>Judge Dashboard — Coming Soon</div>} />
           <Route path="/manager"   element={<div>Manager Dashboard — Coming Soon</div>} />

@@ -1,13 +1,11 @@
-# บทที่ 13 — Candidate Forms
+# บทที่ 14 — Candidate Forms
 
-> **Candidate** เห็นนาฬิกานับถอย, ส่ง URL, และดูคะแนนตัวเองได้ — บทนี้สร้าง `CountdownTimer`, `SubmissionForm`, `ResultCard` และ custom hook `useCountdown`
+> **Candidate** เห็นนาฬิกานับถอย, ส่ง URL, และดูคะแนนตัวเองได้ — บทนี้สร้าง `CountdownTimer`, `SubmissionForm`, `ResultCard`
 
-## ชิ้นงาน — 4 ไฟล์ใหม่ + อัปเดต Dashboard
+## ชิ้นงาน — 3 ไฟล์ใหม่ + อัปเดต Dashboard
 
 ```
 src/
-├── hooks/
-│   └── useCountdown.js             ← สร้างในบทนี้
 └── components/
     └── candidate/
         ├── CountdownTimer.jsx      ← สร้างในบทนี้
@@ -15,51 +13,34 @@ src/
         └── ResultCard.jsx          ← สร้างในบทนี้
 ```
 
-## useCountdown.js — Custom Hook
-
-Custom hook คือฟังก์ชันที่ขึ้นต้นด้วย `use` และ **ใช้ React hook ภายใน** ได้ — ช่วย reuse logic ที่ซับซ้อน
-
-สร้างโฟลเดอร์ `src/hooks/` แล้วสร้างไฟล์ `src/hooks/useCountdown.js`:
-
-```js
-// hooks/useCountdown.js — บทที่ 13
-import { useState, useEffect } from 'react';
-
-export default function useCountdown(openedAt, durationMinutes) {
-  const [timeLeft, setTimeLeft] = useState(null);
-
-  useEffect(() => {
-    if (!openedAt || !durationMinutes) { setTimeLeft(null); return; }
-
-    const endTime = new Date(openedAt).getTime() + durationMinutes * 60 * 1000;
-
-    const tick = () => setTimeLeft(Math.max(0, endTime - Date.now()));
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [openedAt, durationMinutes]);
-
-  if (timeLeft === null) return null;
-
-  const h = Math.floor(timeLeft / 3600000);
-  const m = Math.floor((timeLeft % 3600000) / 60000);
-  const s = Math.floor((timeLeft % 60000) / 1000);
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-}
-```
-
-hook นี้รับ `openedAt` (เวลาเปิด session) และ `durationMinutes` แล้วคืน string `"HH:MM:SS"` หรือ `null`
-
 ## CountdownTimer.jsx
 
 สร้างโฟลเดอร์ `src/components/candidate/` แล้วสร้างไฟล์ `src/components/candidate/CountdownTimer.jsx`:
 
 ```jsx
 // components/candidate/CountdownTimer.jsx — บทที่ 13
-import useCountdown from '../../hooks/useCountdown';
+import { useState, useEffect } from 'react';
 
 export default function CountdownTimer({ session }) {
-  const countdown = useCountdown(session?.opened_at, session?.duration_minutes);
+  const [timeLeft, setTimeLeft] = useState(null);
+
+  useEffect(() => {
+    if (!session?.opened_at || !session?.duration_minutes) { setTimeLeft(null); return; }
+
+    const endTime = new Date(session.opened_at).getTime() + session.duration_minutes * 60 * 1000;
+
+    const tick = () => setTimeLeft(Math.max(0, endTime - Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [session?.opened_at, session?.duration_minutes]);  // รัน effect ใหม่เมื่อ session เปลี่ยน
+
+  const formatTime = (ms) => {
+    const h = Math.floor(ms / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
 
   if (!session || session.status === 'waiting') {
     return <p className="text-center text-gray-400 text-sm">Session has not started yet</p>;
@@ -72,8 +53,8 @@ export default function CountdownTimer({ session }) {
   return (
     <div className="text-center">
       <p className="text-xs text-gray-400 mb-1 uppercase tracking-wide">Time Remaining</p>
-      <p className={`text-5xl font-mono font-bold ${countdown === '00:00:00' ? 'text-red-500' : 'text-blue-600'}`}>
-        {countdown || '--:--:--'}
+      <p className={`text-5xl font-mono font-bold ${timeLeft === 0 ? 'text-red-500' : 'text-blue-600'}`}>
+        {timeLeft !== null ? formatTime(timeLeft) : '--:--:--'}
       </p>
     </div>
   );
@@ -205,7 +186,7 @@ export default function ResultCard({ result }) {
 
 ```jsx
 // pages/candidate/Dashboard.jsx — บทที่ 13 เพิ่ม components จริง
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import Card from '../../components/common/Card';
@@ -221,29 +202,29 @@ export default function CandidateDashboard() {
   const [tasks,      setTasks]      = useState([]);
   const [submission, setSubmission] = useState(null);
   const [result,     setResult]     = useState(null);
-
-  const fetchAll = useCallback(async () => {
-    try {
-      const [cfgRes, taskRes, subRes, resRes] = await Promise.all([
-        api.get('/config'),
-        api.get('/tasks'),
-        api.get('/my-submission'),
-        api.get('/my-result'),
-      ]);
-      setSession(cfgRes.data.data);
-      setTasks(taskRes.data.data);
-      setSubmission(subRes.data.data);
-      setResult(resRes.data.data);
-    } catch (err) {
-      console.error('Failed to fetch data:', err);
-    }
-  }, []);
+  const [tick,       setTick]       = useState(0);              // [!code ++]
 
   useEffect(() => {
+    async function fetchAll() {
+      try {
+        const [cfgRes, taskRes, subRes, resRes] = await Promise.all([
+          api.get('/config'),
+          api.get('/tasks'),
+          api.get('/my-submission'),
+          api.get('/my-result'),
+        ]);
+        setSession(cfgRes.data.data);
+        setTasks(taskRes.data.data);
+        setSubmission(subRes.data.data);
+        setResult(resRes.data.data);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+      }
+    }
     fetchAll();
     const id = setInterval(fetchAll, 5_000);
     return () => clearInterval(id);
-  }, [fetchAll]);
+  }, [tick]);                                                   // [!code ++]
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -262,10 +243,10 @@ export default function CandidateDashboard() {
 
       <main className="max-w-4xl mx-auto p-6 space-y-6">
         <Card>
-          <CountdownTimer session={session} />                    // [!code ++]
-          <p className="text-center text-gray-400 text-sm">     // [!code --]
-            Countdown Timer — จะเพิ่มในบทที่ 13                 // [!code --]
-          </p>                                                    // [!code --]
+          <CountdownTimer session={session} /> {/* [!code ++] */}
+          <p className="text-center text-gray-400 text-sm"> {/* [!code --] */}
+            Countdown Timer — จะเพิ่มในบทที่ 13
+          </p> {/* [!code --] */}
         </Card>
 
         {tasks.map((task) => (
@@ -278,17 +259,17 @@ export default function CandidateDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <h2 className="font-semibold text-gray-900 mb-4">My Submission</h2>
-            <SubmissionForm                                       // [!code ++]
-              submission={submission}                             // [!code ++]
-              sessionOpen={session?.status === 'open'}           // [!code ++]
-              onUpdate={fetchAll}                                 // [!code ++]
-            />                                                    // [!code ++]
-            <p className="text-sm text-gray-400">Submission Form — จะเพิ่มในบทที่ 13</p>  // [!code --]
+            <SubmissionForm {/* [!code ++] */}
+              submission={submission}                                 // [!code ++]
+              sessionOpen={session?.status === 'open'}               // [!code ++]
+              onUpdate={() => setTick(t => t + 1)}                   // [!code ++]
+            /> {/* [!code ++] */}
+            <p className="text-sm text-gray-400">Submission Form — จะเพิ่มในบทที่ 13</p> {/* [!code --] */}
           </Card>
           <Card>
             <h2 className="font-semibold text-gray-900 mb-4">Latest Result</h2>
-            <ResultCard result={result} />                        // [!code ++]
-            <p className="text-sm text-gray-400">Result Card — จะเพิ่มในบทที่ 13</p>      // [!code --]
+            <ResultCard result={result} /> {/* [!code ++] */}
+            <p className="text-sm text-gray-400">Result Card — จะเพิ่มในบทที่ 13</p> {/* [!code --] */}
           </Card>
         </div>
       </main>

@@ -2,6 +2,28 @@
 
 > **บทนี้เตรียมอะไร:** สร้าง `src/services/api.js` — axios instance กลางที่ใส่ Bearer token ให้อัตโนมัติและจัดการ 401 ให้ทุก component ไม่ต้องทำซ้ำ
 
+## Async/Await คืออะไร
+
+API call ใช้เวลา — JavaScript ไม่รอโดย default ต้องบอกให้รอด้วย `async/await`:
+
+```js
+// ❌ ไม่รอ — res เป็น Promise ไม่ใช่ข้อมูลจริง
+const res = api.get('/tasks')
+console.log(res.data)  // undefined!
+
+// ✅ รอ — res เป็นข้อมูลจริง
+async function loadTasks() {
+  const res = await api.get('/tasks')  // await = หยุดรอให้เสร็จก่อน
+  console.log(res.data)               // ได้ข้อมูลจริง
+}
+```
+
+กฎ: `await` ใช้ได้แค่ใน `async function` เท่านั้น — ฟังก์ชันที่ใช้ `await` ต้องขึ้นต้นด้วย `async`
+
+:::tip เทียบกับ Backend
+Backend ใช้ `async function controller(req, res)` + `await pool.execute()` — pattern เดียวกันทุกอย่าง
+:::
+
 ## ปัญหา — ทุก request ต้องใส่ token เอง
 
 ถ้าเรียก axios ตรงๆ ทุกที่:
@@ -80,6 +102,19 @@ api.interceptors.response.use(
 export default api;
 ```
 
+> **ทำไมต้อง `.data.data` ?** — response ซ้อน 2 ชั้น:
+>
+> ```
+> axios response    →  { data: <backend_response>, status, headers, ... }
+> backend response  →  { success: true, data: [...], meta: {} }
+>
+> res               →  axios wrapper
+> res.data          →  { success: true, data: [...], meta: {} }
+> res.data.data     →  [...]  ← payload จริงที่ต้องการ
+> ```
+>
+> ทุก API call ในโปรเจ็คนี้ใช้ `.data.data` เสมอ (ยกเว้น format พิเศษเช่น CSV/PDF)
+
 :::tip import.meta.env ไม่ใช่ process.env
 Vite ใช้ `import.meta.env.VITE_API_URL` — ตัวแปรต้องขึ้นต้นด้วย `VITE_`
 `process.env` ใช้ได้ใน Node.js (backend) เท่านั้น
@@ -115,7 +150,7 @@ export default function App() {
 
   useEffect(() => {                                        // [!code ++]
     api.get('/tasks')                                      // [!code ++]
-      .then(res => setTasks(res.data.data))               // [!code ++]
+      .then(res => setTasks(res.data.data))               // [!code ++]  ← ทำไม .data.data ?
       .catch(err => console.error(err));                   // [!code ++]
   }, []);                                                  // [!code ++]
 
@@ -124,10 +159,10 @@ export default function App() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
         <h1 className="text-2xl font-bold text-gray-900">WorldSkill 2026</h1>
         <p className="text-gray-400 text-sm mt-2">Test Submission Management System</p>
-        <p className="mt-4 text-center text-gray-500 font-mono">{time}</p>   // [!code --]
-        <ul className="mt-4 text-sm text-gray-600 space-y-1">                // [!code ++]
-          {tasks.map(t => <li key={t.id}>{t.title}</li>)}                   // [!code ++]
-        </ul>                                                                 // [!code ++]
+        <p className="mt-4 text-center text-gray-500 font-mono">{time}</p> {/* [!code --] */}
+        <ul className="mt-4 text-sm text-gray-600 space-y-1"> {/* [!code ++] */}
+          {tasks.map(t => <li key={t.id}>{t.title}</li>)} {/* [!code ++] */}
+        </ul> {/* [!code ++] */}
       </div>
     </div>
   );
@@ -157,10 +192,29 @@ npm run dev
 3. Response interceptor redirect ไป `/login` อัตโนมัติ
 :::
 
+## CORS Error คืออะไร
+
+ถ้า frontend (port 3000) ยิง request ไป backend (port 8080) แล้วเห็น error นี้ใน Console:
+
+```
+Access to XMLHttpRequest at 'http://localhost:8080/api/tasks'
+from origin 'http://localhost:3000' has been blocked by CORS policy
+```
+
+**สาเหตุ:** Browser ป้องกัน request ข้าม origin โดย default — ต้อง backend บอก browser ว่าอนุญาต
+
+**วิธีแก้:** Backend ของเราตั้งค่า CORS ไว้แล้วใน `app.js` ด้วย `cors()` middleware — ถ้าเจอ CORS error แสดงว่า backend ยังไม่รัน
+
+```bash
+# รัน backend ก่อน แล้วลองใหม่
+cd backend && npm run dev
+```
+
 ## Common Errors
 
 | Error | สาเหตุ | วิธีแก้ |
 |-------|--------|---------|
-| `Network Error` หรือ CORS error | backend ยังไม่รัน | รัน `cd backend && npm run dev` |
+| `Network Error` | backend ยังไม่รัน | รัน `cd backend && npm run dev` |
+| CORS error ใน Console | backend ยังไม่รัน | รัน backend ก่อนเสมอ |
 | `import.meta.env.VITE_API_URL` เป็น undefined | ไม่มีไฟล์ `.env` | สร้าง `.env` ที่ root ของ `frontend/` |
 | Axios ไม่รู้จัก | ยังไม่ได้ install | รัน `npm install axios` |

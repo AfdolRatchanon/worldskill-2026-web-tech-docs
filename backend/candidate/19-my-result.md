@@ -34,7 +34,7 @@ module.exports = router;
 // resultsController.js — บทที่ 19 (partial)
 const pool = require('../config/db');
 
-async function getViewSession() {
+async function getViewSession() {                                         // ดูผลได้แม้ session ปิดแล้ว (ต่างจาก getActiveSession)
   const [rows] = await pool.execute(
     "SELECT * FROM test_sessions WHERE status IN ('open','closed') ORDER BY id DESC LIMIT 1"
   );

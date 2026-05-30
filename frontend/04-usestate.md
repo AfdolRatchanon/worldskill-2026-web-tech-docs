@@ -81,15 +81,15 @@ export default function App() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
         <h1 className="text-2xl font-bold text-gray-900">WorldSkill 2026</h1>
         <p className="text-gray-400 text-sm mt-2">Test Submission Management System</p>
-        <div className="mt-6 text-center">                         // [!code ++]
-          <p className="text-4xl font-bold text-blue-600">{count}</p> // [!code ++]
-          <button                                                   // [!code ++]
+        <div className="mt-6 text-center"> {/* [!code ++] */}
+          <p className="text-4xl font-bold text-blue-600">{count}</p> {/* [!code ++] */}
+          <button {/* [!code ++] */}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" // [!code ++]
             onClick={() => setCount(count + 1)}                    // [!code ++]
-          >                                                        // [!code ++]
-            Click me                                               // [!code ++]
-          </button>                                                // [!code ++]
-        </div>                                                     // [!code ++]
+          > {/* [!code ++] */}
+            Click me
+          </button> {/* [!code ++] */}
+        </div> {/* [!code ++] */}
       </div>
     </div>
   );
@@ -113,15 +113,32 @@ npm run dev
 - กดหลายครั้ง → ตัวเลขเพิ่มต่อเนื่อง
 - ตัวเลขต้องเปลี่ยนโดยไม่ต้อง refresh หน้า
 
-## สิ่งที่จะใช้ใน project จริง
+## ใช้ในระบบนี้ที่ไหน
 
-| ใช้ที่ไหน | State ที่ต้องการ |
-|----------|----------------|
-| Login form | `username`, `password`, `error`, `loading` |
-| Candidate Dashboard | `session`, `tasks`, `submission`, `result` |
-| SubmissionForm | `frontendUrl`, `backendUrl`, `error`, `loading` |
-| Judge Dashboard | `session`, `candidates` |
-| Manager Dashboard | `sessions`, `selectedId`, `summary`, `ranking`, `status` |
+```jsx
+// ทุก Dashboard มี state เหล่านี้เสมอ
+const [session,    setSession]    = useState(null)
+const [tick,       setTick]       = useState(0)     // trigger refresh
+
+// เพิ่มตาม role
+// Candidate
+const [tasks,      setTasks]      = useState([])
+const [submission, setSubmission] = useState(null)
+const [result,     setResult]     = useState(null)
+
+// Judge
+const [candidates,  setCandidates]  = useState([])
+const [submissions, setSubmissions] = useState([])
+
+// Manager
+const [sessions,   setSessions]   = useState([])
+const [selectedId, setSelectedId] = useState(null)
+const [summary,    setSummary]    = useState(null)
+const [ranking,    setRanking]    = useState([])
+const [status,     setStatus]     = useState(null)
+```
+
+pattern `useState(null)` สำหรับ object เดี่ยว, `useState([])` สำหรับ array — แสดง `—` หรือ loading state ในระหว่างรอข้อมูล
 
 ## Common Errors
 

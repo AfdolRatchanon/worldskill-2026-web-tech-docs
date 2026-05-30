@@ -13,6 +13,10 @@ backend/
         └── results.js             ← แก้ในบทนี้ (เพิ่ม confirm route)
 ```
 
+:::tip
+เปิดไฟล์ `resultsController.js` ที่มีอยู่แล้ว แล้ว**เพิ่มต่อท้าย** — ไม่ต้องพิมพ์ `getMyResult` ใหม่
+:::
+
 **`routes/results.js`** — เพิ่ม confirm route
 
 ```js

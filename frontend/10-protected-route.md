@@ -1,4 +1,4 @@
-# บทที่ 10 — ProtectedRoute
+# บทที่ 11 — ProtectedRoute
 
 > **บทนี้เตรียมอะไร:** สร้าง `ProtectedRoute.jsx` ที่ตรวจสอบ token และ role ก่อนให้เข้าหน้า dashboard — ถ้าไม่ได้ login → redirect `/login`, ถ้า role ผิด → redirect หน้าตัวเอง
 
@@ -24,7 +24,8 @@ src/
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-const HOME = { candidate: '/candidate', judge: '/judge', manager: '/manager' };
+export const HOME = { candidate: '/candidate', judge: '/judge', manager: '/manager' };
+// export เพื่อให้ Login.jsx import ใช้ได้ — HOME อยู่ที่นี่ที่เดียว
 
 export default function ProtectedRoute({ children, role }) {
   const { user, token } = useAuth();
@@ -81,19 +82,19 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/candidate" element={
-            <ProtectedRoute role="candidate">                    // [!code ++]
+            <ProtectedRoute role="candidate"> {/* [!code ++] */}
               <div>Candidate Dashboard — Coming Soon</div>
-            </ProtectedRoute>                                    // [!code ++]
+            </ProtectedRoute> {/* [!code ++] */}
           } />
           <Route path="/judge" element={
-            <ProtectedRoute role="judge">                        // [!code ++]
+            <ProtectedRoute role="judge"> {/* [!code ++] */}
               <div>Judge Dashboard — Coming Soon</div>
-            </ProtectedRoute>                                    // [!code ++]
+            </ProtectedRoute> {/* [!code ++] */}
           } />
           <Route path="/manager" element={
-            <ProtectedRoute role="manager">                      // [!code ++]
+            <ProtectedRoute role="manager"> {/* [!code ++] */}
               <div>Manager Dashboard — Coming Soon</div>
-            </ProtectedRoute>                                    // [!code ++]
+            </ProtectedRoute> {/* [!code ++] */}
           } />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
@@ -128,3 +129,4 @@ npm run dev
 | Redirect loop | `token` มีค่าแต่ `user` เป็น null | ตรวจ `parseToken` ใน AuthContext ว่า parse ได้ |
 | ยังเข้าได้แม้ไม่ login | ลืมห่อ `<ProtectedRoute>` | ตรวจ App.jsx ว่าทุก Route มี ProtectedRoute |
 | role ผิด แต่ไม่ redirect | `HOME` map ไม่มี role นั้น | ตรวจ role ที่ backend ส่งมาใน token payload |
+| Login redirect ผิดหน้า | Login.jsx นิยาม `HOME` เองแยกจาก ProtectedRoute | ให้ `import { HOME } from '../router/ProtectedRoute'` ใน Login.jsx |

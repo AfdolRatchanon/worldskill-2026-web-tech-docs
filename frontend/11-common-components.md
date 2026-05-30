@@ -1,4 +1,4 @@
-# บทที่ 11 — Common Components
+# บทที่ 9 — Common Components
 
 > **บทนี้เตรียมอะไร:** สร้าง component ที่ใช้ซ้ำได้ทั่วโปรเจ็ค: `Button`, `Input`, `Card`, `Badge` — แล้วนำไปใช้ใน Login.jsx เพื่อลดโค้ดซ้ำ
 
@@ -31,6 +31,7 @@ const styles = {
 };
 
 export default function Button({ children, variant = 'primary', className = '', ...props }) {
+  // ...props = "rest props" — รับ prop อื่นๆ ที่ไม่ได้ระบุชื่อ เช่น disabled, onClick, type
   return (
     <button
       className={`
@@ -39,7 +40,7 @@ export default function Button({ children, variant = 'primary', className = '', 
         disabled:opacity-50 disabled:cursor-not-allowed
         ${styles[variant]} ${className}
       `}
-      {...props}
+      {...props}  // spread props ลง <button> → <Button disabled> ทำให้ <button disabled> อัตโนมัติ
     >
       {children}
     </button>
@@ -124,6 +125,19 @@ export default function Card({ children, className = '' }) {
 }
 ```
 
+:::tip children คืออะไร?
+`children` คือ props พิเศษที่ React ส่งให้อัตโนมัติ — คือ content ที่อยู่ระหว่าง opening และ closing tag
+
+```jsx
+<Card>
+  <h2>Title</h2>   // ← ทั้งหมดนี้คือ "children" ที่ Card จะได้รับ
+  <p>Content</p>
+</Card>
+```
+
+Card ไม่รู้ล่วงหน้าว่าจะมี content อะไรอยู่ข้างใน — แค่รับ `children` แล้ว render ออกมา ทำให้ Card ใช้ได้กับ content ทุกประเภท
+:::
+
 ### วิธีใช้
 
 ```jsx
@@ -143,12 +157,14 @@ export default function Card({ children, className = '' }) {
 ```jsx
 // components/common/Badge.jsx — บทที่ 11
 const styles = {
-  waiting:  'bg-gray-100  text-gray-600',
-  open:     'bg-green-100 text-green-700',
-  closed:   'bg-red-100   text-red-700',
+  waiting:  'bg-gray-100   text-gray-600',
+  open:     'bg-green-100  text-green-700',
+  closed:   'bg-red-100    text-red-700',
   pending:  'bg-yellow-100 text-yellow-700',
-  checking: 'bg-blue-100  text-blue-700',
-  checked:  'bg-green-100 text-green-700',
+  checking: 'bg-blue-100   text-blue-700',
+  checked:  'bg-green-100  text-green-700',
+  pass:     'bg-green-100  text-green-700',
+  fail:     'bg-red-100    text-red-700',
 };
 
 export default function Badge({ status }) {
@@ -169,6 +185,8 @@ export default function Badge({ status }) {
 <Badge status="pending" />   // เหลือง
 <Badge status="checking" />  // น้ำเงิน
 <Badge status="checked" />   // เขียว
+<Badge status="pass" />      // เขียว (ใช้ใน RankingTable)
+<Badge status="fail" />      // แดง  (ใช้ใน RankingTable)
 ```
 
 ## อัปเดต Login.jsx — ใช้ Button และ Input
@@ -183,8 +201,7 @@ import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import Input from '../components/common/Input';    // [!code ++]
 import Button from '../components/common/Button';  // [!code ++]
-
-const HOME = { candidate: '/candidate', judge: '/judge', manager: '/manager' };
+import { HOME } from '../router/ProtectedRoute';   // [!code ++]
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -229,7 +246,7 @@ export default function Login() {
               onChange={(e) => setUsername(e.target.value)}  // [!code ++]
               required                                        // [!code ++]
               autoFocus                                       // [!code ++]
-            />                                               // [!code ++]
+            /> {/* [!code ++] */}
             <Input                                            // [!code ++]
               id="password"                                   // [!code ++]
               label="Password"                                // [!code ++]
@@ -238,15 +255,15 @@ export default function Login() {
               value={password}                                // [!code ++]
               onChange={(e) => setPassword(e.target.value)}  // [!code ++]
               required                                        // [!code ++]
-            />                                               // [!code ++]
+            /> {/* [!code ++] */}
             {error && (
               <div role="alert" className="bg-red-50 text-red-600 text-sm px-3 py-2 rounded-lg">
                 {error}
               </div>
             )}
-            <Button type="submit" disabled={loading} className="w-full">  // [!code ++]
+            <Button type="submit" disabled={loading} className="w-full"> {/* [!code ++] */}
               {loading ? 'Signing in…' : 'Sign In'}
-            </Button>                                         // [!code ++]
+            </Button> {/* [!code ++] */}
           </form>
         </div>
       </div>

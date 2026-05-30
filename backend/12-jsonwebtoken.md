@@ -156,7 +156,11 @@ async function login(req, res) {
 }
 
 async function logout(req, res) {                               // [!code ++]
-  res.json({ success: true, data: null, meta: {} });            // [!code ++]
+  try {                                                         // [!code ++]
+    res.json({ success: true, data: null, meta: {} });          // [!code ++]
+  } catch {                                                     // [!code ++]
+    res.status(500).json({ success: false, message: 'Server error' }); // [!code ++]
+  }                                                             // [!code ++]
 }                                                               // [!code ++]
 
 module.exports = { login };   // [!code --]

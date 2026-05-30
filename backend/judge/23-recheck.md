@@ -72,11 +72,11 @@ async function recheckSubmission(req, res) {                                 // 
                                                                              // [!code ++]
     await pool.execute("UPDATE submissions SET status = 'checking' WHERE id = ?", [id]); // [!code ++]
                                                                              // [!code ++]
-    setTimeout(async () => {                                                 // [!code ++]
-      const frontendScore = parseFloat((Math.random() * 25).toFixed(2));    // [!code ++]
-      const backendScore  = parseFloat((Math.random() * 40).toFixed(2));    // [!code ++]
+    setTimeout(async () => {                                                 // [!code ++]  ← ทำงานใน background หลัง 2 วินาที
+      const frontendScore = parseFloat((Math.random() * 25).toFixed(2));    // [!code ++]  สุ่ม 0–25 ทศนิยม 2 ตำแหน่ง
+      const backendScore  = parseFloat((Math.random() * 40).toFixed(2));    // [!code ++]  สุ่ม 0–40 ทศนิยม 2 ตำแหน่ง
       const totalScore    = parseFloat((frontendScore + backendScore).toFixed(2)); // [!code ++]
-      const sub           = rows[0];                                         // [!code ++]
+      const sub           = rows[0];                                         // [!code ++]  submission ที่ดึงมาก่อนหน้า
                                                                              // [!code ++]
       await pool.execute("UPDATE submissions SET status = 'checked' WHERE id = ?", [id]); // [!code ++]
                                                                              // [!code ++]
@@ -97,9 +97,9 @@ async function recheckSubmission(req, res) {                                 // 
           [id, sub.candidate_id, sub.session_id, frontendScore, backendScore, totalScore] // [!code ++]
         );                                                                   // [!code ++]
       }                                                                      // [!code ++]
-    }, 2000);                                                                // [!code ++]
+    }, 2000);                                                                // [!code ++]  ← 2000ms = 2 วินาที
                                                                              // [!code ++]
-    res.json({ success: true, data: { message: 'Re-check started' }, meta: {} }); // [!code ++]
+    res.json({ success: true, data: { message: 'Re-check started' }, meta: {} }); // [!code ++]  ← ตอบทันที ก่อน setTimeout เสร็จ
   } catch {                                                                  // [!code ++]
     res.status(500).json({ success: false, message: 'Server error' });       // [!code ++]
   }                                                                          // [!code ++]

@@ -83,7 +83,7 @@ async function startSession(req, res) {
       return res.status(400).json({ success: false, message: 'Session is already open' });
     }
 
-    if (session.status === 'closed') {           // ถ้าปิดแล้ว สร้าง session ใหม่
+    if (session.status === 'closed') {           // closed → INSERT row ใหม่เพื่อเก็บประวัติ ไม่ UPDATE ของเดิม
       const [result] = await pool.execute(
         "INSERT INTO test_sessions (status, opened_at, duration_minutes) VALUES ('open', NOW(), ?)",
         [session.duration_minutes]
@@ -174,6 +174,16 @@ Authorization: Bearer <token ของ judge01>
 ```
 
 หลังจาก start session แล้ว ทดสอบ candidate submit URL ได้เลย (บท 18)
+
+> **Session State Machine** — status เปลี่ยนได้ตามลำดับนี้เท่านั้น:
+>
+> ```
+> waiting ──PUT start──→ open ──PUT close──→ closed
+>                                               │
+>                                  PUT start ───┘ (INSERT row ใหม่ เพื่อเก็บประวัติ)
+> ```
+>
+> judge ดึง session ล่าสุดด้วย `ORDER BY id DESC LIMIT 1` เสมอ ทำให้สามารถเปิดรอบใหม่ได้หลาย session โดยไม่ทับข้อมูลเก่า
 
 > Pattern: Route → Controller → pool.execute() → res.json() — เหมือนทุก endpoint
 

@@ -22,18 +22,33 @@ router.post('/my-submission', authenticate, authorize('candidate'), ctrl.createS
 router.put('/my-submission',  authenticate, authorize('candidate'), ctrl.updateSubmission); // [!code ++]
 ```
 
+:::tip
+เปิดไฟล์ `submissionsController.js` ที่มีอยู่แล้ว แล้ว**เพิ่มต่อท้าย** — ไม่ต้องพิมพ์ `getViewSession` และ `getMySubmission` ใหม่
+:::
+
 **`controllers/submissionsController.js`** — เพิ่ม 2 functions
 
 ```js
 // submissionsController.js — บทที่ 18 เพิ่ม createSubmission และ updateSubmission
 const pool = require('../config/db');
 
-async function getActiveSession() {
+async function getActiveSession() {                                        // POST/PUT ใช้ session ล่าสุดเสมอ ไม่กรอง status
   const [rows] = await pool.execute(
     'SELECT * FROM test_sessions ORDER BY id DESC LIMIT 1'
   );
   return rows[0] || null;
 }
+
+function validateUrls({ frontend_url, backend_url }) {                     // [!code ++]
+  const isHttp = (s) => {                                                  // [!code ++]
+    try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; } // [!code ++]
+    catch { return false; }                                                // [!code ++]
+  };                                                                       // [!code ++]
+  if (!frontend_url || !backend_url) return 'Both URLs are required';     // [!code ++]
+  if (!isHttp(frontend_url) || !isHttp(backend_url))                      // [!code ++]
+    return 'URLs must start with http:// or https://';                    // [!code ++]
+  return null;                                                             // [!code ++]
+}                                                                          // [!code ++]
 
 async function getMySubmission(req, res) { /* ... เหมือนบทที่ 17 ... */ }
 
@@ -45,9 +60,8 @@ async function createSubmission(req, res) {                                // [!
     }                                                                      // [!code ++]
                                                                            // [!code ++]
     const { frontend_url, backend_url } = req.body;                       // [!code ++]
-    if (!frontend_url || !backend_url) {                                   // [!code ++]
-      return res.status(400).json({ success: false, message: 'Both URLs are required' }); // [!code ++]
-    }                                                                      // [!code ++]
+    const urlError = validateUrls(req.body);                               // [!code ++]
+    if (urlError) return res.status(400).json({ success: false, message: urlError }); // [!code ++]
                                                                            // [!code ++]
     const [existing] = await pool.execute(                                 // [!code ++]
       'SELECT id FROM submissions WHERE candidate_id = ? AND session_id = ?', // [!code ++]
@@ -64,7 +78,7 @@ async function createSubmission(req, res) {                                // [!
     const [rows] = await pool.execute(                                     // [!code ++]
       'SELECT * FROM submissions WHERE id = ?', [result.insertId]          // [!code ++]
     );                                                                     // [!code ++]
-    res.json({ success: true, data: rows[0], meta: {} });                  // [!code ++]
+    res.status(201).json({ success: true, data: rows[0], meta: {} });      // [!code ++]
   } catch {                                                                // [!code ++]
     res.status(500).json({ success: false, message: 'Server error' });     // [!code ++]
   }                                                                        // [!code ++]
@@ -78,9 +92,8 @@ async function updateSubmission(req, res) {                                // [!
     }                                                                      // [!code ++]
                                                                            // [!code ++]
     const { frontend_url, backend_url } = req.body;                       // [!code ++]
-    if (!frontend_url || !backend_url) {                                   // [!code ++]
-      return res.status(400).json({ success: false, message: 'Both URLs are required' }); // [!code ++]
-    }                                                                      // [!code ++]
+    const urlError = validateUrls(req.body);                               // [!code ++]
+    if (urlError) return res.status(400).json({ success: false, message: urlError }); // [!code ++]
                                                                            // [!code ++]
     const [existing] = await pool.execute(                                 // [!code ++]
       'SELECT id FROM submissions WHERE candidate_id = ? AND session_id = ?', // [!code ++]
@@ -130,3 +143,4 @@ Body: { "frontend_url": "http://localhost:3000", "backend_url": "http://localhos
 | 403 `Session is not open` | session ยังไม่ open | รอบท 20 ให้ judge เปิด session |
 | 409 `Submission already exists` | ส่งซ้ำใน session เดิม | ใช้ PUT แทน POST |
 | 404 `No submission found` | PUT แต่ยังไม่เคย POST | ต้อง POST ก่อนแล้วค่อย PUT |
+| 400 `URLs must start with http://` | ส่ง URL ที่ไม่ใช่ `http://` หรือ `https://` | ตรวจ URL format ที่ส่งมา |

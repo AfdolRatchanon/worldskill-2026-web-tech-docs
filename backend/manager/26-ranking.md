@@ -22,13 +22,23 @@ router.get('/statistics/status',  authenticate, authorize('manager'), ctrl.getSt
 router.get('/statistics/ranking', authenticate, authorize('manager'), ctrl.getRanking); // [!code ++]
 ```
 
+:::tip
+เปิดไฟล์ `statisticsController.js` ที่มีอยู่แล้ว แล้ว**เพิ่มต่อท้าย** — ไม่ต้องพิมพ์ `getSummary` และ `getStatus` ใหม่
+:::
+
+> **RANK() OVER — SQL Window Function** คืออะไร:
+>
+> `ORDER BY total_score DESC` ธรรมดา — แค่เรียงลำดับ ไม่มีเลข rank
+>
+> `RANK() OVER (ORDER BY total_score DESC)` — คำนวณเลข rank ให้แต่ละ row อัตโนมัติ ถ้าคะแนนเท่ากันได้ rank เดียวกัน (เช่น 1, 1, 3 ไม่ใช่ 1, 2, 3)
+
 **`controllers/statisticsController.js`** — เพิ่ม `getRanking`
 
 ```js
 // statisticsController.js — บทที่ 26 เพิ่ม getRanking
 async function getRanking(req, res) {                                         // [!code ++]
   try {                                                                       // [!code ++]
-    const session = await getViewSession();                                   // [!code ++]
+    const session = await getViewSession(req.query.session_id);               // [!code ++]
     if (!session) return res.json({ success: true, data: [], meta: {} });    // [!code ++]
                                                                               // [!code ++]
     const [rows] = await pool.execute(`                                       // [!code ++]
@@ -73,7 +83,7 @@ Authorization: Bearer <token ของ manager01>
 }
 ```
 
-> `RANK() OVER (ORDER BY total_score DESC)` — SQL Window Function จัด rank โดยไม่ต้อง sort ใน Node.js
+> `RANK() OVER (ORDER BY total_score DESC)` — จัด rank ใน SQL โดยตรง ไม่ต้องคำนวณเพิ่มใน Node.js
 
 > Pattern: Route → Controller → pool.execute() → res.json() — เหมือนทุก endpoint
 
