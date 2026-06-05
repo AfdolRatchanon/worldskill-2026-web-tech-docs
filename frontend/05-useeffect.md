@@ -1,6 +1,6 @@
 # บทที่ 5 — useEffect + useCallback
 
-> **บทนี้เตรียมอะไร:** เรียนรู้ useEffect สำหรับ side effect เช่น fetch ข้อมูลจาก API และ useCallback สำหรับสร้างฟังก์ชัน fetch แบบ stable — pattern นี้ใช้จริงใน Dashboard ทุกหน้า (บทที่ 12-15)
+> **บทนี้เตรียมอะไร:** เรียนรู้ useEffect สำหรับ side effect เช่น fetch ข้อมูลจาก API และ useCallback สำหรับสร้างฟังก์ชัน fetch แบบ stable — pattern นี้ใช้จริงใน Dashboard ทุกหน้า (บทที่ 14-18)
 
 ## ปัญหา — ดึงข้อมูลตอนไหน?
 
@@ -162,6 +162,37 @@ useEffect(() => {
 1. **tick pattern** (ใช้ในโปรเจ็คนี้) — ประกาศ fetchAll ภายใน effect ไม่ต้องใส่ใน dependency, ใช้ `tick` เป็นตัว trigger แทน — เข้าใจง่าย
 2. **useCallback** — ห่อฟังก์ชันด้วย `useCallback` เพื่อให้ reference คงที่ — เป็น pattern ที่พบบ่อยในโปรเจ็คทั่วไป
 :::
+
+## 🏋️ Workshop ย่อย — นาฬิกา + document.title
+
+**โจทย์:** แสดงเวลาที่เดินทุกวินาที และอัปเดตชื่อแท็บ browser ตามจำนวนครั้งที่กดปุ่ม
+
+**ต้องใช้:** `useEffect` + `setInterval` + cleanup (`clearInterval`) · dependency array 2 แบบ (`[]` กับ `[count]`)
+
+**เริ่มจาก:**
+
+```jsx
+import { useState, useEffect } from 'react';
+export default function App() {
+  const [now,   setNow]   = useState(new Date().toLocaleTimeString());
+  const [count, setCount] = useState(0);
+
+  // TODO 1: useEffect([]) — setInterval อัปเดต now ทุก 1 วิ + return cleanup
+
+  // TODO 2: useEffect([count]) — document.title = `กดไป ${count} ครั้ง`
+
+  return (
+    <div className="p-6">
+      <p className="text-3xl font-mono">{now}</p>
+      <button onClick={() => setCount(count + 1)}>กดเพิ่ม ({count})</button>
+    </div>
+  );
+}
+```
+
+**ผลลัพธ์ที่ต้องเห็น:** เวลาเดินเอง · กดปุ่ม → ชื่อแท็บ browser เปลี่ยนตามจำนวนครั้ง · Console ไม่มี warning
+
+**ท้าทายเพิ่ม (ออปชัน):** ลองลบ cleanup ออกแล้วดูว่าเกิดอะไร — เข้าใจว่าทำไมต้อง `return () => clearInterval(id)`
 
 ## Common Errors
 

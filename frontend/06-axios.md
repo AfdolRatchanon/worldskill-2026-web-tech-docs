@@ -1,4 +1,4 @@
-# บทที่ 6 — Axios + api.js
+# บทที่ 7 — Axios + api.js
 
 > **บทนี้เตรียมอะไร:** สร้าง `src/services/api.js` — axios instance กลางที่ใส่ Bearer token ให้อัตโนมัติและจัดการ 401 ให้ทุก component ไม่ต้องทำซ้ำ
 
@@ -209,6 +209,41 @@ from origin 'http://localhost:3000' has been blocked by CORS policy
 # รัน backend ก่อน แล้วลองใหม่
 cd backend && npm run dev
 ```
+
+## 🏋️ Workshop ย่อย — ดึงสถานะ session มาแสดง
+
+> ต้องรัน backend ก่อน (`cd backend && npm run dev`)
+
+**โจทย์:** ใช้ `api.js` ดึง `GET /config` แล้วแสดงสถานะ session บนหน้าจอ
+
+**ต้องใช้:** `api` instance · `async/await` · `useEffect([])` · `.data.data` · conditional render ตอนยังโหลดไม่เสร็จ
+
+**เริ่มจาก:**
+
+```jsx
+import { useState, useEffect } from 'react';
+import api from './services/api';
+export default function App() {
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    async function load() {
+      // TODO: await api.get('/config') → setSession(res.data.data)
+    }
+    load();
+  }, []);
+
+  return (
+    <div className="p-6">
+      {/* TODO: ถ้า session ยัง null → "กำลังโหลด..." ไม่งั้นโชว์ session.status */}
+    </div>
+  );
+}
+```
+
+**ผลลัพธ์ที่ต้องเห็น:** หน้าจอแสดงสถานะ session จาก backend จริง · DevTools → Network เห็น `GET /api/config` status 200
+
+**ท้าทายเพิ่ม (ออปชัน):** ครอบ `try/catch` แล้วถ้า error ให้โชว์ "เชื่อม backend ไม่ได้" (เผื่อ backend ไม่รัน)
 
 ## Common Errors
 

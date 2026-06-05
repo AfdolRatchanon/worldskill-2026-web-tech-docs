@@ -1,4 +1,4 @@
-# บทที่ 17 — Export
+# บทที่ 19 — Export
 
 > **Manager** ดาวน์โหลดรายงานได้ 2 format: JSON, CSV — ส่ง JWT header ผ่าน axios แล้วดาวน์โหลดผ่าน Blob URL
 
@@ -113,7 +113,7 @@ import ExportButtons from '../../components/manager/ExportButtons';  // [!code +
 
 ## App.jsx สุดท้าย — ครบทุก Route
 
-หลังบทที่ 16 `App.jsx` ควรมีหน้าตาเป็นแบบนี้:
+หลังบทที่ 19 `App.jsx` ควรมีหน้าตาเป็นแบบนี้:
 
 ```jsx
 // App.jsx — Final (บทที่ 16)

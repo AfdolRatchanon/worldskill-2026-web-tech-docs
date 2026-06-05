@@ -1,4 +1,4 @@
-# บทที่ 13 — Candidate Dashboard
+# บทที่ 15 — Candidate Dashboard
 
 > **Candidate** เห็นหน้านี้หลัง login — ดูสถานะ session, นาฬิกานับถอย, โจทย์, และ form ส่ง URL
 
@@ -71,7 +71,7 @@ export default function CandidateDashboard() {
       <main className="max-w-4xl mx-auto p-6 space-y-6">
         <Card>
           <p className="text-center text-gray-400 text-sm">
-            Countdown Timer — จะเพิ่มในบทที่ 13
+            Countdown Timer — จะเพิ่มในบทที่ 16
           </p>
         </Card>
 
@@ -85,11 +85,11 @@ export default function CandidateDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <h2 className="font-semibold text-gray-900 mb-4">My Submission</h2>
-            <p className="text-sm text-gray-400">Submission Form — จะเพิ่มในบทที่ 13</p>
+            <p className="text-sm text-gray-400">Submission Form — จะเพิ่มในบทที่ 16</p>
           </Card>
           <Card>
             <h2 className="font-semibold text-gray-900 mb-4">Latest Result</h2>
-            <p className="text-sm text-gray-400">Result Card — จะเพิ่มในบทที่ 13</p>
+            <p className="text-sm text-gray-400">Result Card — จะเพิ่มในบทที่ 16</p>
           </Card>
         </div>
       </main>

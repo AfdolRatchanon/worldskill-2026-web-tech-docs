@@ -13,6 +13,9 @@ hero:
       text: 🖥️ เริ่ม Frontend →
       link: /frontend/01-setup
     - theme: alt
+      text: 🔗 บูรณาการ BE+FE
+      link: /integration/01-overview
+    - theme: alt
       text: 🏆 Checklist แข่งขัน
       link: /backend/29-checklist
 
@@ -59,13 +62,24 @@ features:
 | 📊 Manager | 25–28 | Statistics · Ranking · Sessions · Report |
 | 🏁 สรุป | 29 | Competition Checklist — ขั้นตอนเริ่มแข่งจริง |
 
-### 🖥️ Frontend (16 บท)
+### 🖥️ Frontend (20 บท)
 
 | กลุ่ม | บท | เป้าหมาย |
 |------|-----|---------|
-| ⚡ เตรียมพร้อม | 1–6 | Setup · React · Tailwind · useState · useEffect · Axios |
-| 🔐 Auth | 7–10 | React Router · AuthContext · Login · ProtectedRoute |
-| 🧩 Components | 11–16 | Common · Candidate · Judge · Manager · Export |
+| ⚡ พื้นฐาน + Concept | 1–8 | Setup · React · Tailwind · useState · useEffect · Rendering Patterns · Axios · React Router |
+| 🏆 Workshop รวม | 9 | Todolist — capstone ฝึกพื้นฐานครบในที่เดียว (ไม่ต้องมี backend) |
+| 🔐 Auth | 10–13 | AuthContext · Common Components · Login · ProtectedRoute |
+| 🧩 Components | 14–19 | Dashboard Pattern · Candidate · Forms · Judge · Manager · Export |
+| 🏁 สรุป | 20 | Competition Checklist |
+
+### 🔗 บูรณาการ Backend + Frontend (4 บท)
+
+เรียนหลังจบ BE และ FE — ลากเส้นเดียวทะลุ 2 ฝั่ง ผ่าน 3 ฟีเจอร์จริง
+
+| บท | เป้าหมาย |
+|-----|---------|
+| 1 | ภาพรวม + Anatomy ของ 1 request (สัญญา · lifecycle กลาง · polling) |
+| 2–4 | 3 Vertical Slice: Login · ส่ง URL · เปิด Session (cross-role) |
 
 ## 📖 วิธีใช้คู่มือนี้
 

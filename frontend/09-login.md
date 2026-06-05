@@ -1,4 +1,4 @@
-# บทที่ 10 — Login Page
+# บทที่ 12 — Login Page
 
 > **Candidate, Judge, Manager** เห็นหน้านี้ก่อน — กรอก username/password → POST /api/login → navigate ไปหน้า dashboard ตาม role
 

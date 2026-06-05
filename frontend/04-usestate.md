@@ -1,6 +1,6 @@
 # บทที่ 4 — useState
 
-> **บทนี้เตรียมอะไร:** เรียนรู้ useState สำหรับจัดการ state ใน component — จะใช้จริงตั้งแต่บทที่ 6 เป็นต้นไปในทุก form (Login, SubmissionForm) และทุก Dashboard
+> **บทนี้เตรียมอะไร:** เรียนรู้ useState สำหรับจัดการ state ใน component — จะใช้จริงตั้งแต่บทที่ 7 เป็นต้นไปในทุก form (Login, SubmissionForm) และทุก Dashboard
 
 ## ปัญหา — ตัวแปรธรรมดาทำให้ UI ไม่อัปเดต
 
@@ -139,6 +139,34 @@ const [status,     setStatus]     = useState(null)
 ```
 
 pattern `useState(null)` สำหรับ object เดี่ยว, `useState([])` สำหรับ array — แสดง `—` หรือ loading state ในระหว่างรอข้อมูล
+
+## 🏋️ Workshop ย่อย — Toggle + Like
+
+**โจทย์:** ทำ 2 อย่างในหน้าเดียว — (1) ปุ่ม Toggle สลับซ่อน/แสดงข้อความ (2) ปุ่ม ❤️ กดแล้วเลขเพิ่มขึ้น
+
+**ต้องใช้:** `useState` (boolean + number) · `setState` · conditional render (`&&`)
+
+**เริ่มจาก:**
+
+```jsx
+import { useState } from 'react';
+export default function App() {
+  const [show,  setShow]  = useState(true);
+  const [likes, setLikes] = useState(0);
+  return (
+    <div className="p-6 space-y-4">
+      <button onClick={() => setShow(!show)}>Toggle</button>
+      {/* TODO 1: ถ้า show เป็น true → แสดง <p>ข้อความลับ</p> */}
+
+      <button onClick={() => setLikes(likes + 1)}>❤️ {likes}</button>
+    </div>
+  );
+}
+```
+
+**ผลลัพธ์ที่ต้องเห็น:** กด Toggle → ข้อความซ่อน/แสดง · กด ❤️ → เลขเพิ่มทันทีโดยไม่ต้อง refresh
+
+**ท้าทายเพิ่ม (ออปชัน):** เพิ่มช่อง input ที่พิมพ์แล้วโชว์ "สวัสดี {name}" สด ๆ (controlled input)
 
 ## Common Errors
 

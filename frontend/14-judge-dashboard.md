@@ -1,4 +1,4 @@
-# บทที่ 15 — Judge Dashboard
+# บทที่ 17 — Judge Dashboard
 
 > **Judge** เห็นหน้านี้หลัง login — เปิด/ปิด session, ดูรายชื่อ candidate, re-check submission, และ confirm คะแนน
 

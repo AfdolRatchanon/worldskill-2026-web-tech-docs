@@ -1,4 +1,4 @@
-# บทที่ 11 — ProtectedRoute
+# บทที่ 13 — ProtectedRoute
 
 > **บทนี้เตรียมอะไร:** สร้าง `ProtectedRoute.jsx` ที่ตรวจสอบ token และ role ก่อนให้เข้าหน้า dashboard — ถ้าไม่ได้ login → redirect `/login`, ถ้า role ผิด → redirect หน้าตัวเอง
 

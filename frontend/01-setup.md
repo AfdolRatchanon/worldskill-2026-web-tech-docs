@@ -1,6 +1,6 @@
 # บทที่ 1 — Setup + Vite
 
-> **บทนี้เตรียมอะไร:** สร้าง React project จากศูนย์ด้วย Vite ติดตั้ง Tailwind CSS v4 และ Axios ให้พร้อมใช้งาน — โครงสร้างไฟล์ที่ได้จะใช้ต่อยอดทุกบทจนถึงบทที่ 17
+> **บทนี้เตรียมอะไร:** สร้าง React project จากศูนย์ด้วย Vite ติดตั้ง Tailwind CSS v4 และ Axios ให้พร้อมใช้งาน — โครงสร้างไฟล์ที่ได้จะใช้ต่อยอดทุกบทจนถึงบทที่ 20
 
 ## ปัญหา — ยังไม่มี project เลย
 
@@ -261,6 +261,30 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 :::tip ถ้าเห็น API call ออก 2 ครั้งใน Network tab
 ไม่ใช่ bug — เป็น StrictMode ที่ทำงานปกติ ใน production build จะรัน 1 ครั้งตามปกติ
 :::
+
+## 🏋️ Workshop ย่อย — การ์ดแนะนำตัว
+
+**โจทย์:** แก้ `App.jsx` จาก "Hello World" เป็นการ์ดแนะนำตัวเอง — ชื่อ + บทบาท + เลขที่นั่ง โดยใช้กฎ JSX ให้ถูก
+
+**ต้องใช้:** Fragment `<>...</>` · ตัวแปรใน `{}` · `className` (ไม่ใช่ `class`)
+
+**เริ่มจาก:**
+
+```jsx
+export default function App() {
+  const name = 'ใส่ชื่อคุณ';
+  const seat = 7;
+  return (
+    <>
+      {/* TODO: <h1> ชื่อ + <p> บทบาท + <p> เลขที่นั่ง {seat} */}
+    </>
+  );
+}
+```
+
+**ผลลัพธ์ที่ต้องเห็น:** หน้าเว็บแสดงชื่อ/บทบาท/เลขที่นั่งจากตัวแปร · ถ้าลืมห่อ Fragment จะ error ทันที (ลองดูได้)
+
+**ท้าทายเพิ่ม (ออปชัน):** ใส่ `className="font-bold"` ให้ชื่อหนาขึ้น — เตรียมเชื่อมบท Tailwind
 
 ## Common Errors
 

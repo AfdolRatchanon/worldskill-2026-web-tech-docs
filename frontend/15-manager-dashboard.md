@@ -1,4 +1,4 @@
-# บทที่ 16 — Manager Dashboard
+# บทที่ 18 — Manager Dashboard
 
 > **Manager** เห็นหน้านี้หลัง login — ดู statistics, ranking, เลือก session ที่ต้องการดู — read-only ทั้งหมด
 

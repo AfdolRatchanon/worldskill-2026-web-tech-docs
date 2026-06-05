@@ -1,4 +1,4 @@
-# บทที่ 8 — AuthContext
+# บทที่ 10 — AuthContext
 
 > **บทนี้เตรียมอะไร:** สร้าง `AuthContext.jsx` ที่เก็บ `user` และ `token` ไว้กลาง ทุก component เข้าถึงได้ผ่าน `useAuth()` — login state คงอยู่หลัง refresh หน้า
 
@@ -137,7 +137,7 @@ export default function App() {
 ```
 
 :::warning ลำดับสำคัญ
-`AuthProvider` ต้องอยู่**นอก** `BrowserRouter` เพราะ `ProtectedRoute` (ที่จะสร้างในบทที่ 10) ต้องเข้าถึงทั้ง auth และ router พร้อมกัน
+`AuthProvider` ต้องอยู่**นอก** `BrowserRouter` เพราะ `ProtectedRoute` (ที่จะสร้างในบทที่ 13) ต้องเข้าถึงทั้ง auth และ router พร้อมกัน
 :::
 
 ## สิ่งที่ทุก component เข้าถึงได้ผ่าน useAuth()
@@ -169,7 +169,7 @@ npm run dev
 
 **DevTools → Console:** ต้องไม่มี error ใดๆ
 
-> `logout()` เรียก `POST /api/logout` ก่อน clear token — ทดสอบได้ในบทที่ 12, 14, 15 เมื่อมีปุ่ม Logout จริง โดย DevTools → Network → ต้องเห็น `POST /api/logout` เมื่อกด Logout
+> `logout()` เรียก `POST /api/logout` ก่อน clear token — ทดสอบได้ในบทที่ 12, 17, 18 เมื่อมีปุ่ม Logout จริง โดย DevTools → Network → ต้องเห็น `POST /api/logout` เมื่อกด Logout
 
 :::tip ทดสอบง่ายๆ ว่า user ถูกอ่านหรือเปล่า
 เพิ่ม `console.log` ชั่วคราวใน component ใดๆ:

@@ -1,4 +1,4 @@
-# บทที่ 12 — Dashboard Pattern (สูตรสำเร็จ)
+# บทที่ 14 — Dashboard Pattern (สูตรสำเร็จ)
 
 > **บทนี้เตรียมอะไร:** ก่อนสร้าง Dashboard จริง — ทำความรู้จักกับ **2 Pattern** ที่ใช้ซ้ำใน **ทุก Dashboard** ในระบบนี้ รู้จัก 2 อย่างนี้ → สร้าง Candidate, Judge, Manager Dashboard ได้ทั้งหมด
 

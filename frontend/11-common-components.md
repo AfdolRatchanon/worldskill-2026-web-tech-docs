@@ -1,4 +1,4 @@
-# บทที่ 9 — Common Components
+# บทที่ 11 — Common Components
 
 > **บทนี้เตรียมอะไร:** สร้าง component ที่ใช้ซ้ำได้ทั่วโปรเจ็ค: `Button`, `Input`, `Card`, `Badge` — แล้วนำไปใช้ใน Login.jsx เพื่อลดโค้ดซ้ำ
 

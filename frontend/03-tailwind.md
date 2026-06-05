@@ -1,6 +1,6 @@
 # บทที่ 3 — Tailwind CSS
 
-> **บทนี้เตรียมอะไร:** เรียนรู้ utility classes ของ Tailwind CSS และ design system ที่ใช้ทั่วโปรเจ็ค — แก้ `App.jsx` ให้มี UI มีสีและ spacing เพื่อเตรียมรับ component จริงในบทที่ 9-16
+> **บทนี้เตรียมอะไร:** เรียนรู้ utility classes ของ Tailwind CSS และ design system ที่ใช้ทั่วโปรเจ็ค — แก้ `App.jsx` ให้มี UI มีสีและ spacing เพื่อเตรียมรับ component จริงในบทที่ 11-19
 
 ## ปัญหา — Hello World ไม่มีสไตล์
 
@@ -128,6 +128,29 @@ Tailwind ใช้ breakpoint prefix เพิ่มหน้า class:
 | (ไม่มี) | ทุกขนาด (mobile first) |
 | `md:` | ≥ 768px (tablet) |
 | `lg:` | ≥ 1024px (desktop) |
+
+## 🏋️ Workshop ย่อย — สไตล์การ์ดด้วย Tailwind
+
+**โจทย์:** จัดการ์ดกลางจอ พื้นเทา การ์ดขาวมีเงา+มุมโค้ง หัวข้อหนาดำ และปุ่มน้ำเงินที่ hover แล้วเข้มขึ้น — ใช้ Tailwind ล้วน (ห้าม `style={{}}`)
+
+**ต้องใช้:** `bg-*` · `text-*` · `rounded-*` · `shadow-*` · `p-*` · `hover:*` · `flex`/`items-center`/`justify-center`
+
+**เริ่มจาก:**
+
+```jsx
+return (
+  <div className="min-h-screen bg-gray-50 /* TODO: จัดกลางจอ */">
+    <div className="/* TODO: การ์ดขาว มุมโค้ง เงา padding */">
+      <h1 className="/* TODO: หนา ดำ */">WorldSkill 2026</h1>
+      <button className="/* TODO: น้ำเงิน text ขาว hover เข้ม */">Start</button>
+    </div>
+  </div>
+);
+```
+
+**ผลลัพธ์ที่ต้องเห็น:** การ์ดอยู่กลางจอ ปุ่มเปลี่ยนสีตอนเอาเมาส์ชี้ — เทียบกับตาราง Design System ด้านบน
+
+**ท้าทายเพิ่ม (ออปชัน):** ทำ responsive — มือถือ padding น้อย (`p-4`) จอใหญ่ padding มาก (`md:p-8`)
 
 ## Common Errors
 

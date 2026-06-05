@@ -159,3 +159,30 @@ AuthProvider (เก็บ user, token)
 | Props | ข้อมูลจาก parent → child (read-only) |
 | State | ข้อมูลภายในที่เปลี่ยนได้ ทำให้ re-render |
 | Virtual DOM | React อัปเดตแค่ส่วนที่เปลี่ยน |
+
+## 🏋️ Workshop ย่อย — ProfileCard component
+
+**โจทย์:** สร้าง component `ProfileCard` ที่รับ props `name`, `role` แล้ว render — เรียกใช้ 3 ครั้งด้วยค่าต่างกัน
+
+**ต้องใช้:** function component · props (destructuring) · เรียก component ซ้ำ
+
+**เริ่มจาก:**
+
+```jsx
+function ProfileCard({ name, role }) {
+  // TODO: return JSX แสดง name + role
+}
+
+export default function App() {
+  return (
+    <div className="p-6 space-y-2">
+      <ProfileCard name="Alice" role="candidate" />
+      {/* TODO: เพิ่มอีก 2 คน role ต่างกัน (judge, manager) */}
+    </div>
+  );
+}
+```
+
+**ผลลัพธ์ที่ต้องเห็น:** เห็น 3 การ์ด ชื่อ/บทบาทต่างกัน — แก้ component ที่เดียว ใช้ได้ทุกการ์ด (พลังของ component + props)
+
+**ท้าทายเพิ่ม (ออปชัน):** เพิ่ม prop พิเศษ `children` ให้ใส่ข้อความเสริมใต้ชื่อ เช่น `<ProfileCard ...>ทีม A</ProfileCard>`

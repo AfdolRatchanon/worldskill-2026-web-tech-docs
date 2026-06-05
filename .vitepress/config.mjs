@@ -13,6 +13,7 @@ export default withMermaid(defineConfig({
       { text: '🏠 หน้าหลัก', link: '/' },
       { text: '⚙️ Backend', link: '/backend/01-installation' },
       { text: '🖥️ Frontend', link: '/frontend/01-setup' },
+      { text: '🔗 บูรณาการ', link: '/integration/01-overview' },
       { text: '🏆 BE Checklist', link: '/backend/29-checklist' },
       { text: '🏆 FE Checklist', link: '/frontend/17-checklist' },
     ],
@@ -93,41 +94,66 @@ export default withMermaid(defineConfig({
 
       '/frontend/': [
         {
-          text: '⚡ เตรียมพร้อม + Concept',
+          text: '⚡ พื้นฐาน + Concept',
           items: [
             { text: '1 — 🚀 Setup + Vite', link: '/frontend/01-setup' },
             { text: '2 — ⚛️ React คืออะไร', link: '/frontend/02-react-intro' },
             { text: '3 — 🎨 Tailwind CSS', link: '/frontend/03-tailwind' },
             { text: '4 — 🔄 useState', link: '/frontend/04-usestate' },
             { text: '5 — ⏱️ useEffect + Polling', link: '/frontend/05-useeffect' },
-            { text: '6 — 🌐 Axios + api.js', link: '/frontend/06-axios' },
+            { text: '6 — 🧩 Rendering Patterns', link: '/frontend/rendering-patterns' },
+            { text: '7 — 🌐 Axios + api.js', link: '/frontend/06-axios' },
+            { text: '8 — 🗺️ React Router', link: '/frontend/07-router' },
           ],
         },
         {
-          text: '🔐 Routing + Auth',
+          text: '🏆 Workshop รวม',
           items: [
-            { text: '7 — 🗺️ React Router', link: '/frontend/07-router' },
-            { text: '8 — 🔑 AuthContext', link: '/frontend/08-auth-context' },
-            { text: '9 — 🧱 Common Components', link: '/frontend/11-common-components' },
-            { text: '10 — 🔒 Login Page', link: '/frontend/09-login' },
-            { text: '11 — 🛡️ ProtectedRoute', link: '/frontend/10-protected-route' },
+            { text: '9 — ✅ Todolist (Capstone)', link: '/frontend/todolist' },
+          ],
+        },
+        {
+          text: '🔐 Auth',
+          items: [
+            { text: '10 — 🔑 AuthContext', link: '/frontend/08-auth-context' },
+            { text: '11 — 🧱 Common Components', link: '/frontend/11-common-components' },
+            { text: '12 — 🔒 Login Page', link: '/frontend/09-login' },
+            { text: '13 — 🛡️ ProtectedRoute', link: '/frontend/10-protected-route' },
           ],
         },
         {
           text: '🧩 Components + Pages',
           items: [
-            { text: '12 — 📐 Dashboard Pattern', link: '/frontend/dashboard-pattern' },
-            { text: '13 — 🎓 Candidate Dashboard', link: '/frontend/12-candidate-dashboard' },
-            { text: '14 — 📝 Candidate Forms', link: '/frontend/13-candidate-forms' },
-            { text: '15 — ⚖️ Judge Dashboard', link: '/frontend/14-judge-dashboard' },
-            { text: '16 — 📊 Manager Dashboard', link: '/frontend/15-manager-dashboard' },
-            { text: '17 — 📄 Export', link: '/frontend/16-export' },
+            { text: '14 — 📐 Dashboard Pattern', link: '/frontend/dashboard-pattern' },
+            { text: '15 — 🎓 Candidate Dashboard', link: '/frontend/12-candidate-dashboard' },
+            { text: '16 — 📝 Candidate Forms', link: '/frontend/13-candidate-forms' },
+            { text: '17 — ⚖️ Judge Dashboard', link: '/frontend/14-judge-dashboard' },
+            { text: '18 — 📊 Manager Dashboard', link: '/frontend/15-manager-dashboard' },
+            { text: '19 — 📄 Export', link: '/frontend/16-export' },
           ],
         },
         {
           text: '🏁 สรุป',
           items: [
-            { text: '18 — 🏆 Competition Checklist', link: '/frontend/17-checklist' },
+            { text: '20 — 🏆 Competition Checklist', link: '/frontend/17-checklist' },
+          ],
+        },
+      ],
+
+      '/integration/': [
+        {
+          text: '🔗 บูรณาการ — แผนการรบ 6 ชม.',
+          items: [
+            { text: '1 — 🗺️ แผนการรบ (Build Order)', link: '/integration/01-overview' },
+            { text: '2 — 🏗️ Phase 0: รากฐาน', link: '/integration/02-phase0-foundation' },
+          ],
+        },
+        {
+          text: '🏁 ทบทวน',
+          items: [
+            { text: '🏆 BE Checklist', link: '/backend/29-checklist' },
+            { text: '🏆 FE Checklist', link: '/frontend/17-checklist' },
+            { text: '📖 คำศัพท์', link: '/glossary' },
           ],
         },
       ],

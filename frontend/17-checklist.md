@@ -1,4 +1,4 @@
-# บทที่ 18 — Frontend Competition Checklist
+# บทที่ 20 — Frontend Competition Checklist
 
 > **บทนี้เตรียมอะไร:** ขั้นตอนเริ่มแข่งขันจริงสำหรับ Frontend — เปิดโปรเจ็ค, รัน dev server, ตรวจสอบทุกหน้าทำงานได้ครบ
 
