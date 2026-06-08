@@ -72,14 +72,14 @@ features:
 | 🧩 Components | 14–19 | Dashboard Pattern · Candidate · Forms · Judge · Manager · Export |
 | 🏁 สรุป | 20 | Competition Checklist |
 
-### 🔗 บูรณาการ Backend + Frontend (4 บท)
+### 🔗 บูรณาการ Backend + Frontend (9 บท)
 
-เรียนหลังจบ BE และ FE — ลากเส้นเดียวทะลุ 2 ฝั่ง ผ่าน 3 ฟีเจอร์จริง
+เรียนหลังจบ BE และ FE — **แผนการรบ 6 ชม.** สร้างทีละฟีเจอร์ทะลุ BE→FE ตามลำดับ พร้อม checkpoint + คะแนนทุกก้าว
 
 | บท | เป้าหมาย |
 |-----|---------|
-| 1 | ภาพรวม + Anatomy ของ 1 request (สัญญา · lifecycle กลาง · polling) |
-| 2–4 | 3 Vertical Slice: Login · ส่ง URL · เปิด Session (cross-role) |
+| 1–2 | แผนการรบ (Build Order) + Phase 0 รากฐาน |
+| 3–9 | Phase 1–7: Auth · Config/Tasks · Session · Submission · Judge/Results · Manager · Deploy |
 
 ## 📖 วิธีใช้คู่มือนี้
 

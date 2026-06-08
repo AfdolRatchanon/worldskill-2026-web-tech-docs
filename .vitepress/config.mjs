@@ -146,6 +146,13 @@ export default withMermaid(defineConfig({
           items: [
             { text: '1 — 🗺️ แผนการรบ (Build Order)', link: '/integration/01-overview' },
             { text: '2 — 🏗️ Phase 0: รากฐาน', link: '/integration/02-phase0-foundation' },
+            { text: '3 — 🔐 Phase 1: Auth', link: '/integration/03-phase1-auth' },
+            { text: '4 — 📋 Phase 2: Config + Tasks', link: '/integration/04-phase2-config-tasks' },
+            { text: '5 — ⏱️ Phase 3: Session', link: '/integration/05-phase3-session' },
+            { text: '6 — 📤 Phase 4: Submission', link: '/integration/06-phase4-submission' },
+            { text: '7 — ⚖️ Phase 5: Judge + Results', link: '/integration/07-phase5-judge-results' },
+            { text: '8 — 📊 Phase 6: Manager', link: '/integration/08-phase6-manager' },
+            { text: '9 — 🚀 Phase 7: Polish + Deploy', link: '/integration/09-phase7-polish-deploy' },
           ],
         },
         {

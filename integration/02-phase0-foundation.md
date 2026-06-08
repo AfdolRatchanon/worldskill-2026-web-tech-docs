@@ -1,172 +1,209 @@
-# บทที่ 2 — Phase 0: รากฐาน (Foundation)
+# บทที่ 2 — Phase 0: รากฐาน (Bootstrap จากศูนย์)
 
-> 🎯 **เป้าหมาย:** ทำให้ **2 server คุยกันได้** — backend รันที่ 8080, frontend รันที่ 3000, และ frontend ยิงหา backend ได้โดย **ไม่มี CORS error** ก่อนเขียนฟีเจอร์แรกแม้แต่ตัวเดียว
+> 🎯 **ทำตามทีละขั้น** — สร้างโปรเจ็ค Backend + Frontend จากศูนย์ จนทั้งสอง server รันได้ ก่อนเริ่มฟีเจอร์แรก
 >
-> ⏱️ **เวลา:** ~0:30 · 🏆 **คะแนน:** ยังไม่ได้ตรง ๆ แต่ **เปิดทางทุก phase** + วางฐาน Code Structure (RSC §7)
+> ⏱️ ~0:30 · บทนี้ไม่อธิบายทฤษฎี เน้นพิมพ์ตาม (ทฤษฎีอยู่ใน [Backend บท 1–9](/backend/01-installation) และ [Frontend บท 1](/frontend/01-setup))
 
-:::tip ทำไมต้องมี Phase 0
-80% ของเวลาที่เสียไปฟรีในห้องแข่งคือ "เขียนฟีเจอร์เสร็จแล้วแต่ต่อไม่ติด" เพราะ CORS / baseURL / .env ผิด — Phase นี้กำจัดปัญหานั้นทิ้งตั้งแต่ต้น ทดสอบให้ผ่านก่อน แล้วที่เหลือจะลื่น
+:::warning 🗄️ Database — ผู้จัดเตรียมให้ (ไม่ต้องสร้างเอง)
+ในสนามสอบจริง **schema + seed data ถูกเตรียมโดยฝ่ายผู้จัด** — คุณ **ไม่ต้องเขียน** `schema.sql` / `seed.js` เอง แค่ทำให้ MariaDB ของคุณมีฐานข้อมูลตามที่ผู้จัดให้ แล้วตั้งค่าใน `backend/.env` ให้ตรง
+
+> ขั้นตอน "โหลด DB ที่ผู้จัดให้" จะระบุละเอียดหลังสรุปรูปแบบที่ผู้จัดใช้ (ค่อยคุยกันภายหลัง) · กฎสำคัญ (TP §10): **ห้ามแก้ seed data เดิม แต่ต่อ schema เพิ่มได้**
 :::
-
-## 🧭 ลำดับใน Phase นี้ (BE ก่อน → FE)
-
-```mermaid
-flowchart LR
-    A["⚙️ BE: project + .env + db pool"] --> B["⚙️ BE: app.js + cors"]
-    B --> C["⚙️ BE: schema + seed"]
-    C --> D["✅ backend รัน 8080"]
-    D --> E["🖥️ FE: vite + tailwind + router"]
-    E --> F["🖥️ FE: api.js (baseURL ชี้ 8080)"]
-    F --> G["✅ frontend รัน 3000 ยิง BE ติด"]
-```
 
 ---
 
-## ⚙️ Backend — วางรากฐานฝั่ง server
+# ส่วน A — Backend
 
-> เต็ม ๆ อยู่ใน [บท 3 Setup](/backend/03-setup) → [4 Express](/backend/04-express) → [6 dotenv](/backend/06-dotenv) → [7 cors](/backend/07-cors) → [8 Database](/backend/08-database) → [9 mysql2](/backend/09-mysql2) — ที่นี่ดูเฉพาะ **จุดเชื่อม**
-
-### ลำดับไฟล์ที่ต้องมี
-
-| ไฟล์ | หน้าที่ | บทเต็ม |
-|------|--------|:---:|
-| `backend/.env` | ค่าลับ: DB, `JWT_SECRET`, `FRONTEND_URL`, `PORT` | [6](/backend/06-dotenv) |
-| `backend/src/config/db.js` | connection pool ไป MariaDB | [9](/backend/09-mysql2) |
-| `backend/src/app.js` | express + cors + mount routes | [4](/backend/04-express),[7](/backend/07-cors) |
-| `backend/database/schema.sql` | โครงตาราง (users, sessions, submissions, results) | [8](/backend/08-database) |
-| `backend/database/seed.js` | ใส่ user/session เริ่มต้น | [8](/backend/08-database) |
-
-### จุดเชื่อม 1 — `.env` (ตัวแปรที่ทุก phase พึ่ง)
+## A.1 สร้างโฟลเดอร์ + ติดตั้ง
 
 ```bash
-# backend/.env
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=worldskill
-JWT_SECRET=change-this-secret        # ← Phase 1 ใช้เซ็น token
-FRONTEND_URL=http://localhost:3000   # ← CORS อนุญาต origin นี้
-PORT=8080
+mkdir backend && cd backend
+npm init -y
+npm install express cors mysql2 bcryptjs jsonwebtoken dotenv
+npm install -D nodemon
 ```
 
-:::warning ในห้องแข่งจริง `FRONTEND_URL` ไม่ใช่ localhost
-ระบบตรวจ + กรรมการเข้าจาก **IP ในห้อง** (เช่น `http://10.10.0.105:3000`) ถ้า `FRONTEND_URL=http://localhost:3000` อย่างเดียว → CORS block เครื่องอื่น ดู [Phase 7](/integration/09-phase7-polish-deploy) เรื่องตั้งค่า LAN
-:::
+## A.2 แก้ `backend/package.json` — เพิ่ม scripts
 
-### จุดเชื่อม 2 — `app.js` (ประตูที่ FE จะวิ่งเข้า)
-
-```js
-// backend/src/app.js — 3 บรรทัดที่ทำให้ FE ต่อติด
-app.use(cors({ origin: process.env.FRONTEND_URL }));  // [!code highlight] อนุญาต FE
-app.use(express.json());                              // [!code highlight] แปลง JSON body → req.body
-app.use('/api', require('./routes/auth'));            // ทุก route ขึ้นต้น /api
-```
-
-### ✅ ทดสอบปิด Backend
-
-```bash
-cd backend
-npm install
-npm run seed        # สร้างตาราง + ใส่ seed (session id=1, status=waiting)
-npm run dev         # ต้องเห็น: Backend running on http://localhost:8080
-```
-
-ยิงทดสอบใน Postman — เอา endpoint สาธารณะที่เบาสุด:
-
-```
-POST http://localhost:8080/api/login
-Body: { "username": "candidate01", "password": "cand123" }
-```
-
-ได้ `success: true` + `token` = **Backend พร้อม** (ฟีเจอร์ login เต็ม ๆ ทำใน [Phase 1](/integration/03-phase1-auth))
-
----
-
-## 🖥️ Frontend — วางรากฐานฝั่ง client
-
-> เต็ม ๆ อยู่ใน [บท 1 Setup](/frontend/01-setup) → [3 Tailwind](/frontend/03-tailwind) → [6 Axios](/frontend/06-axios) → [7 Router](/frontend/07-router) → [8 AuthContext](/frontend/08-auth-context)
-
-### ลำดับไฟล์ที่ต้องมี
-
-| ไฟล์ | หน้าที่ | บทเต็ม |
-|------|--------|:---:|
-| `vite.config.js` | ตั้ง dev server **port 3000** | [1](/frontend/01-setup) |
-| `src/services/api.js` | axios instance — **baseURL ชี้ 8080** + แนบ token | [6](/frontend/06-axios) |
-| `src/contexts/AuthContext.jsx` | เก็บ user/token ทั้งแอป | [8](/frontend/08-auth-context) |
-| `src/App.jsx` | `<AuthProvider>` + `<BrowserRouter>` ครอบ route | [7](/frontend/07-router) |
-
-### จุดเชื่อม 3 — `api.js` (สายที่ลากไปหา Backend)
-
-```js
-// frontend/src/services/api.js — สายเดียวที่ทุก component ใช้ยิง BE
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',  // [!code highlight]
-});
-```
-
-:::tip baseURL ต้อง "ตรงข้าม" กับ FRONTEND_URL ฝั่ง BE
-`api.js baseURL` → ชี้ไป **Backend** (8080) ส่วน `FRONTEND_URL` ฝั่ง BE → ชี้กลับมา **Frontend** (3000) สองค่านี้คือปลายสองข้างของสายเส้นเดียวกัน ตั้งให้ตรงห้อง LAN ทั้งคู่
-:::
-
-### จุดเชื่อม 4 — `App.jsx` (ครอบทั้งแอปด้วย AuthProvider)
-
-```jsx
-// frontend/src/App.jsx — AuthProvider ครอบ → ทุกหน้าเรียก useAuth() ได้
-export default function App() {
-  return (
-    <AuthProvider>          {/* [!code highlight] */}
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          {/* route อื่นเพิ่มทีละ phase */}
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
+```json
+{
+  "name": "worldskill-2026-backend",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev":   "nodemon src/app.js"
+  }
 }
 ```
 
-### ✅ ทดสอบปิด Frontend
+## A.3 สร้าง `backend/.env`
+
+> ใช้ค่า host / port / user / password / ชื่อฐานข้อมูล **ตามที่ผู้จัดกำหนด**
 
 ```bash
-cd frontend
-npm install
-npm run dev         # ต้องเห็น: Local: http://localhost:3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=ใส่รหัส MariaDB ตามที่ผู้จัดกำหนด
+DB_NAME=ชื่อฐานข้อมูลที่ผู้จัดเตรียมให้
+JWT_SECRET=change-this-to-any-long-random-string
+FRONTEND_URL=http://localhost:3000
+PORT=8080
 ```
 
-เปิดเบราว์เซอร์ → DevTools (F12) → Console — ยังไม่มีหน้า login ก็ได้ ขอแค่ **ไม่มี error สีแดง**
+## A.4 สร้าง `backend/src/config/db.js`
+
+```js
+const mysql = require('mysql2/promise');
+require('dotenv').config();
+
+const pool = mysql.createPool({
+  host:             process.env.DB_HOST,
+  port:             process.env.DB_PORT,
+  user:             process.env.DB_USER,
+  password:         process.env.DB_PASSWORD,
+  database:         process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit:  10,
+});
+
+module.exports = pool;
+```
+
+## A.5 สร้าง `backend/src/app.js`
+
+```js
+require('dotenv').config();
+const express = require('express');
+const cors    = require('cors');
+
+const app = express();
+
+app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(express.json());
+
+// 👇 route ของแต่ละ phase จะมาเพิ่มตรงนี้ทีละบรรทัด
+// app.use('/api', require('./routes/auth'));   ← Phase 1
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+```
+
+## ✅ ทดสอบ Backend
+
+```bash
+npm run dev      # ต้องเห็น "Backend running on http://localhost:8080"
+```
+
+> Phase 0 ยังไม่มี route ที่ query DB — แค่ server start ได้ก็พอ · ต้องโหลด DB ที่ผู้จัดให้เข้า MariaDB ก่อนถึง **Phase 1** (login จะ query ตาราง users)
 
 ---
 
-## 🔗 ทดสอบจุดเชื่อม BE ↔ FE (หัวใจของ Phase นี้)
+# ส่วน B — Frontend
 
-วางโค้ดยิง API ชั่วคราวใน component ไหนก็ได้ แล้วดู DevTools → Network:
+## B.1 สร้างโปรเจ็ค + ติดตั้ง
 
-```js
-import api from './services/api';
-api.post('/login', { username: 'candidate01', password: 'cand123' })
-   .then(r => console.log('เชื่อมติด ✅', r.data))
-   .catch(e => console.error('เชื่อมไม่ติด ❌', e));
+```bash
+# กลับมาที่โฟลเดอร์โปรเจ็คหลัก (นอก backend/)
+npm create vite@latest frontend -- --template react
+cd frontend
+npm install axios react-router-dom
+npm install -D @tailwindcss/vite tailwindcss
 ```
 
-| เห็นแบบนี้ | แปลว่า |
-|-----------|--------|
-| `เชื่อมติด ✅ { success: true, ... }` | ผ่าน! ทั้งระบบพร้อมต่อ Phase 1 |
-| `CORS policy ... blocked` | `FRONTEND_URL` ฝั่ง BE ไม่ตรง origin ของ FE |
-| `Network Error` / `ERR_CONNECTION_REFUSED` | backend ไม่ได้รัน / baseURL ผิด port |
-| `404 /api/login` | route ไม่ได้ mount / พิมพ์ path ผิด |
+## B.2 แก้ `frontend/vite.config.js`
+
+```js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  server:  { port: 3000 },
+  preview: { port: 3000 },
+});
+```
+
+## B.3 แทนที่ `frontend/src/index.css` (บรรทัดเดียว)
+
+```css
+@import "tailwindcss";
+```
+
+## B.4 แทนที่ `frontend/src/main.jsx`
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+## B.5 แทนที่ `frontend/src/App.jsx` (ชั่วคราว)
+
+```jsx
+export default function App() {
+  return <div className="p-6 text-2xl">Hello WorldSkill 2026</div>;
+}
+```
+
+## B.6 สร้าง `frontend/.env`
+
+```bash
+VITE_API_URL=http://localhost:8080/api
+```
+
+## B.7 สร้าง `frontend/src/services/api.js`
+
+```js
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401 && !err.config?.url?.includes('/login')) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(err);
+  }
+);
+
+export default api;
+```
+
+## ✅ ทดสอบ Frontend
+
+```bash
+npm run dev      # ต้องเห็น Local: http://localhost:3000
+```
+
+เปิด `http://localhost:3000` → เห็น "Hello WorldSkill 2026" + DevTools Console ไม่มี error สีแดง
 
 ---
 
 ## ☑️ Checkpoint ปิด Phase 0
 
-ข้ามไป Phase 1 ได้เมื่อ **ครบทุกข้อ**:
+- [ ] backend รัน 8080 · frontend รัน 3000 ไม่มี error
+- [ ] โครงไฟล์ครบ: `backend/src/{config,app.js}` · `frontend/src/services/api.js` + `.env`
+- [ ] เข้าใจว่า **DB ผู้จัดเตรียมให้** — ต้องโหลดเข้า MariaDB ก่อน Phase 1
 
-- [ ] `npm run seed` ผ่าน — มี seed data ในฐานข้อมูล
-- [ ] backend รันที่ **8080** ไม่ error
-- [ ] frontend รันที่ **3000** ไม่ error
-- [ ] FE ยิง `POST /api/login` แล้วได้ `success: true` — **ไม่มี CORS error**
-- [ ] `.env` มี `JWT_SECRET` และ `FRONTEND_URL` ครบ (Phase 1 ต้องใช้ทันที)
-
-➡️ ฐานพร้อม — ไปต่อ [Phase 1: Auth](/integration/03-phase1-auth) สร้างฟีเจอร์ login ให้ทะลุ BE→FE เป็น slice แรกจริง
+➡️ รากฐานพร้อม — [Phase 1: Auth](/integration/03-phase1-auth) เขียน login ทะลุ BE→FE
