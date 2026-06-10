@@ -10,6 +10,9 @@ hero:
       text: ⚙️ เริ่ม Backend →
       link: /backend/01-installation
     - theme: brand
+      text: 🌱 เริ่ม Frontend Simple →
+      link: /frontend-simple/01-overview
+    - theme: brand
       text: 🖥️ เริ่ม Frontend →
       link: /frontend/01-setup
     - theme: alt
@@ -61,6 +64,17 @@ features:
 | ⚖️ Judge | 20–24 | Session Control · Candidates · Submissions · Recheck · Confirm |
 | 📊 Manager | 25–28 | Statistics · Ranking · Sessions · Report |
 | 🏁 สรุป | 29 | Competition Checklist — ขั้นตอนเริ่มแข่งจริง |
+
+### 🌱 Frontend Simple (10 บท)
+
+เวอร์ชันเรียบง่ายที่สุด — **ฟีเจอร์ครบเหมือนตัวเต็มแต่เหลือ 9 ไฟล์ ไม่มี CSS เลย** เหมาะเริ่มก่อนถ้ายังไม่เคยเขียน React
+
+| กลุ่ม | บท | เป้าหมาย |
+|------|-----|---------|
+| 🌱 เริ่มต้น | 1–2 | ภาพรวม · สร้างโปรเจกต์ |
+| 🧰 ไฟล์กลาง | 3–5 | auth.js (Token) · api.js (Axios + Interceptor) · App.jsx (Router + ProtectedRoute) |
+| 📄 สร้างทีละหน้า | 6–9 | Login · Candidate · Judge · Manager |
+| 🏁 สรุป | 10 | ทดสอบทั้งระบบ 16 ข้อ + แผนที่ไปต่อตัวเต็ม |
 
 ### 🖥️ Frontend (20 บท)
 

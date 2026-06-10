@@ -12,6 +12,7 @@ export default withMermaid(defineConfig({
     nav: [
       { text: '🏠 หน้าหลัก', link: '/' },
       { text: '⚙️ Backend', link: '/backend/01-installation' },
+      { text: '🌱 Frontend Simple', link: '/frontend-simple/01-overview' },
       { text: '🖥️ Frontend', link: '/frontend/01-setup' },
       { text: '🔗 บูรณาการ', link: '/integration/01-overview' },
       { text: '🏆 BE Checklist', link: '/backend/29-checklist' },
@@ -87,6 +88,40 @@ export default withMermaid(defineConfig({
           text: '🏁 สรุป',
           items: [
             { text: '29 — 🏆 Competition Checklist', link: '/backend/29-checklist' },
+            { text: '📖 คำศัพท์', link: '/glossary' },
+          ],
+        },
+      ],
+
+      '/frontend-simple/': [
+        {
+          text: '🌱 เริ่มต้น',
+          items: [
+            { text: '1 — 🗺️ ภาพรวม Frontend Simple', link: '/frontend-simple/01-overview' },
+            { text: '2 — 🚀 สร้างโปรเจกต์', link: '/frontend-simple/02-setup' },
+          ],
+        },
+        {
+          text: '🧰 ไฟล์กลางที่ทุกหน้าใช้',
+          items: [
+            { text: '3 — 🎟️ auth.js จัดการ Token', link: '/frontend-simple/03-auth' },
+            { text: '4 — 🌐 api.js คุยกับ Backend', link: '/frontend-simple/04-api' },
+            { text: '5 — 🛡️ App.jsx เส้นทาง + ยามเฝ้าประตู', link: '/frontend-simple/05-app-router' },
+          ],
+        },
+        {
+          text: '📄 สร้างทีละหน้า',
+          items: [
+            { text: '6 — 🔒 หน้า Login', link: '/frontend-simple/06-login' },
+            { text: '7 — 🎓 หน้า Candidate', link: '/frontend-simple/07-candidate' },
+            { text: '8 — ⚖️ หน้า Judge', link: '/frontend-simple/08-judge' },
+            { text: '9 — 📊 หน้า Manager', link: '/frontend-simple/09-manager' },
+          ],
+        },
+        {
+          text: '🏁 สรุป',
+          items: [
+            { text: '10 — ✅ ทดสอบทั้งระบบ + ไปต่อตัวเต็ม', link: '/frontend-simple/10-testing' },
             { text: '📖 คำศัพท์', link: '/glossary' },
           ],
         },
