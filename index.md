@@ -3,32 +3,29 @@ layout: home
 
 hero:
   name: "WorldSkill 2026"
-  text: "Web Technologies"
-  tagline: "คู่มือสร้าง Backend และ Frontend ทีละขั้นตอน สำหรับนักเรียนที่เตรียมแข่งขัน WorldSkill Web Technologies"
+  text: "Web Technologies — Real DB"
+  tagline: "คู่มือสร้าง Backend + Frontend ตาม Schema ทางการ (seed_data.sql) ทีละขั้นตอน สำหรับนักเรียนที่เตรียมแข่งขัน WorldSkill Web Technologies"
   actions:
     - theme: brand
       text: ⚙️ เริ่ม Backend →
-      link: /backend/01-installation
+      link: /backend-real-db/01-overview
     - theme: brand
-      text: 🌱 เริ่ม Frontend Simple →
-      link: /frontend-simple/01-overview
-    - theme: brand
-      text: 🖥️ เริ่ม Frontend →
-      link: /frontend/01-setup
-    - theme: alt
-      text: 🔗 บูรณาการ BE+FE
-      link: /integration/01-overview
+      text: 🌐 เริ่ม Frontend →
+      link: /frontend-simple-real-db/01-overview
     - theme: alt
       text: 🏆 Checklist แข่งขัน
-      link: /backend/29-checklist
+      link: /backend-real-db/25-checklist
+    - theme: alt
+      text: 📦 เอกสารเดิม (อ้างอิง)
+      link: /legacy/backend/01-installation
 
 features:
-  - title: 📦 โค้ดต่อยอดทีละบท
-    details: แต่ละบทเพิ่มโค้ดเพียง 2–5 บรรทัดจากบทก่อน เห็นชัดว่าเพิ่มอะไร เปลี่ยนอะไร ไม่มีโค้ดที่ต้องทิ้งทีหลัง
+  - title: 🗄️ ตรงกับ Schema ทางการ
+    details: ทุกบทอิงตาราง users / sessions / tasks / submissions / results จากไฟล์ seed_data.sql โดยตรง — รหัสผ่าน plain-text, candidate_code, คะแนน score ตัวเดียว, สถานะ active/closed
+  - title: 📦 โค้ดทีละ endpoint / ทีละหน้า
+    details: backend แยกบทต่อ endpoint, frontend แยกบทต่อหน้า — พิมพ์ตามได้จริง เห็นภาพว่าแต่ละไฟล์ทำอะไร
   - title: ✅ ทดสอบได้ทุกขั้นตอน
-    details: ทุกบทมีขั้นตอนทดสอบผ่าน Postman พร้อมบอกว่าต้องเห็นอะไร ผ่านแล้วค่อยไปบทถัดไป
-  - title: 🏆 เหมาะกับห้องแข่งขัน
-    details: สอนผ่าน Command Line และ Postman ทั้งหมด ไม่ต้องพึ่ง extension หรือ internet ในห้องสอบ
+    details: ทุกบทมีขั้นตอนทดสอบ (Postman / เบราว์เซอร์) บอกชัดว่าต้องเห็นอะไร ผ่านแล้วค่อยไปบทถัดไป
 
 ---
 
@@ -46,54 +43,58 @@ features:
 
 | ส่วน | Technology | Port |
 |------|-----------|------|
-| 🖥️ Frontend | React + Vite + Tailwind CSS | 3000 |
+| 🌐 Frontend | React + Vite | 3000 |
 | ⚙️ Backend | Node.js + Express | 8080 |
-| 🗄️ Database | MariaDB | 3306 |
+| 🗄️ Database | MariaDB (`worldskill2026_real`) | 3306 |
+
+## 🗄️ Schema ทางการ (`seed_data.sql`)
+
+ทุกบทในคู่มือนี้อิง 5 ตารางนี้ — **ห้ามจำสลับกับเวอร์ชันเดิม**
+
+| ตาราง | คอลัมน์สำคัญ | หมายเหตุ |
+|-------|------------|---------|
+| `users` | id, username, **password** (plain-text), role, full_name, **candidate_code** | ไม่มี bcrypt · candidate_code = รหัสผู้เข้าแข่ง (C01..) |
+| `sessions` | id, **status** (`initialized`/`active`/`closed`), updated_at | ปิดด้วย judge · จับเวลา/auto-close = บทเสริม |
+| `tasks` | id, title, description | |
+| `submissions` | id, candidate_id, **task_id**, frontend_url, backend_url, status (`submitted`/`recheck`/`confirmed`), created_at | ผูกกับ task ไม่ใช่ session |
+| `results` | id, submission_id, **score** (ตัวเดียว), status (`pending`/`confirmed`) | ไม่มี frontend/backend score แยก |
 
 ## 📚 สารบัญ
 
-### ⚙️ Backend (29 บท)
+### ⚙️ Backend (Real DB) — 25 บท + 2 บทเสริม
 
 | กลุ่ม | บท | เป้าหมาย |
 |------|-----|---------|
-| 🔧 เตรียมระบบ | 1–3 | ติดตั้งเครื่องมือ · ภาพรวม Backend · เตรียม Project |
-| ⚡ สร้าง Server | 4–10 | Express · req&res · dotenv · cors · Database & SQL · mysql2 · Checkpoint |
-| 🔐 ระบบ Login | 11–14 | bcryptjs · JWT · Auth Routes · Middleware Stack |
-| 🌐 Shared Endpoints | 15–16 | GET /api/config · GET /api/tasks |
-| 🎓 Candidate | 17–19 | GET/POST/PUT /api/my-submission · GET /api/my-result |
-| ⚖️ Judge | 20–24 | Session Control · Candidates · Submissions · Recheck · Confirm |
-| 📊 Manager | 25–28 | Statistics · Ranking · Sessions · Report |
-| 🏁 สรุป | 29 | Competition Checklist — ขั้นตอนเริ่มแข่งจริง |
+| 🔧 เริ่มต้น | 1–3 | ภาพรวม · ติดตั้งเครื่องมือ · เตรียม Project |
+| ⚡ สร้าง Server | 4–8 | Express · dotenv & cors · Database & Schema · mysql2 · Checkpoint |
+| 🔐 Authentication | 9–11 | JWT · Login (plain-text) · Architecture & app.js |
+| 🌐 Shared | 12–13 | GET /api/config · GET /api/tasks |
+| 🎓 Candidate | 14–16 | GET/POST/PUT /api/my-submission · GET /api/my-result |
+| ⚖️ Judge | 17–21 | Session · Candidates · Submissions · Recheck · Confirm |
+| 📊 Manager | 22–24 | Statistics · Ranking · Report |
+| 🏁 สรุป | 25 | Competition Checklist |
+| 🧩 บทเสริม (ออปชัน) | 26–27 | จับเวลาสอบ + ปิด session อัตโนมัติ · จำกัด URL ให้เป็น LAN |
 
-### 🌱 Frontend Simple (10 บท)
+### 🌐 Frontend (Real DB) — 10 บท + 3 บทเสริม
 
-เวอร์ชันเรียบง่ายที่สุด — **ฟีเจอร์ครบเหมือนตัวเต็มแต่เหลือ 9 ไฟล์ ไม่มี CSS เลย** เหมาะเริ่มก่อนถ้ายังไม่เคยเขียน React
+ใช้ **`frontend-simple-real-db`** (เรียบง่าย เน้น logic) เป็นหลัก · ตัว **พร้อมแข่ง** (`frontend-real-db`: design system + responsive + a11y + countdown timer) อยู่ในบทเสริม
 
 | กลุ่ม | บท | เป้าหมาย |
 |------|-----|---------|
-| 🌱 เริ่มต้น | 1–2 | ภาพรวม · สร้างโปรเจกต์ |
+| 🌐 เริ่มต้น | 1–2 | ภาพรวม · สร้างโปรเจกต์ |
 | 🧰 ไฟล์กลาง | 3–5 | auth.js (Token) · api.js (Axios + Interceptor) · App.jsx (Router + ProtectedRoute) |
 | 📄 สร้างทีละหน้า | 6–9 | Login · Candidate · Judge · Manager |
-| 🏁 สรุป | 10 | ทดสอบทั้งระบบ 16 ข้อ + แผนที่ไปต่อตัวเต็ม |
+| 🏁 สรุป | 10 | ทดสอบทั้งระบบ |
+| 🏆 บทเสริม (พร้อมแข่ง) | 11–13 | ภาพรวม · Countdown Timer · Design System + a11y |
 
-### 🖥️ Frontend (20 บท)
+### 📦 เอกสารเดิม (อ้างอิง — ไม่ใช่ schema ทางการ)
 
-| กลุ่ม | บท | เป้าหมาย |
-|------|-----|---------|
-| ⚡ พื้นฐาน + Concept | 1–8 | Setup · React · Tailwind · useState · useEffect · Rendering Patterns · Axios · React Router |
-| 🏆 Workshop รวม | 9 | Todolist — capstone ฝึกพื้นฐานครบในที่เดียว (ไม่ต้องมี backend) |
-| 🔐 Auth | 10–13 | AuthContext · Common Components · Login · ProtectedRoute |
-| 🧩 Components | 14–19 | Dashboard Pattern · Candidate · Forms · Judge · Manager · Export |
-| 🏁 สรุป | 20 | Competition Checklist |
+เก็บไว้สำหรับเทียบ/อ้างอิง — เวอร์ชันเดิมใช้ `test_sessions`, bcrypt, คะแนนแยก FE/BE และมี timer
 
-### 🔗 บูรณาการ Backend + Frontend (9 บท)
-
-เรียนหลังจบ BE และ FE — **แผนการรบ 6 ชม.** สร้างทีละฟีเจอร์ทะลุ BE→FE ตามลำดับ พร้อม checkpoint + คะแนนทุกก้าว
-
-| บท | เป้าหมาย |
-|-----|---------|
-| 1–2 | แผนการรบ (Build Order) + Phase 0 รากฐาน |
-| 3–9 | Phase 1–7: Auth · Config/Tasks · Session · Submission · Judge/Results · Manager · Deploy |
+- [⚙️ Backend (เดิม) 29 บท](/legacy/backend/01-installation)
+- [🌱 Frontend Simple (เดิม) 10 บท](/legacy/frontend-simple/01-overview)
+- [🖥️ Frontend (เดิม) 20 บท](/legacy/frontend/01-setup)
+- [🔗 บูรณาการ (เดิม) 9 บท](/legacy/integration/01-overview)
 
 ## 📖 วิธีใช้คู่มือนี้
 
@@ -101,4 +102,4 @@ features:
 
 1. สร้างไฟล์และพิมพ์โค้ดตามที่แสดงในแต่ละบท
 2. ผ่านขั้นตอน **ทดสอบ** ก่อนไปบทถัดไปเสมอ
-3. เมื่อเรียนครบ 28 บท จะได้ backend ที่รันได้จริงครบทุก endpoint
+3. เมื่อเรียนครบ จะได้ backend + frontend ที่รันได้จริงครบทุก endpoint ตาม schema ทางการ

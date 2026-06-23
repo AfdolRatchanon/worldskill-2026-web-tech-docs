@@ -253,4 +253,4 @@ setSubmission(subRes.data.data);                        // [!code ++]
 - [ ] browser: ส่งสำเร็จเห็นทันที · error ขึ้นจอ · ปิด session แล้ว disabled
 - [ ] login candidate อื่น → เห็นเฉพาะ submission ของตัวเอง
 
-➡️ [Phase 5: Judge + Results](/integration/07-phase5-judge-results) — ตรวจ → ยืนยัน → candidate เห็นผล
+➡️ [Phase 5: Judge + Results](/legacy/integration/07-phase5-judge-results) — ตรวจ → ยืนยัน → candidate เห็นผล

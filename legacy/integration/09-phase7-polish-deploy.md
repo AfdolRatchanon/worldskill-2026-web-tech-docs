@@ -28,7 +28,7 @@ cd backend  && npm start                          # ฟังทุก interface
 เปิดมือถือ/โน้ตบุ๊กอีกเครื่องในวง LAN เดียวกัน พิมพ์ `http://10.10.0.105:3000` ต้องเข้าได้ — ถ้าเข้าจากเครื่องตัวเองได้แต่เครื่องอื่นไม่ได้ มักเป็น **Firewall** หรือลืม `--host`
 :::
 
-> รายละเอียดเต็ม: [FE Checklist บท 20](/frontend/17-checklist) · [BE Checklist บท 29](/backend/29-checklist)
+> รายละเอียดเต็ม: [FE Checklist บท 20](/legacy/frontend/17-checklist) · [BE Checklist บท 29](/legacy/backend/29-checklist)
 
 ## 🔌 2. Offline Compliance (ห้ามแตะอินเทอร์เน็ต)
 
@@ -80,6 +80,6 @@ cd backend  && npm start                          # ฟังทุก interface
 
 ครบ 8 phase = full-stack ที่รันได้จริงในห้องแข่ง ทบทวนรายละเอียดแต่ละชิ้นได้ที่:
 
-- ฝั่ง Backend: [Competition Checklist บท 29](/backend/29-checklist)
-- ฝั่ง Frontend: [Competition Checklist บท 20](/frontend/17-checklist)
-- กลับไปดูภาพรวมลำดับ: [แผนการรบ 6 ชม.](/integration/01-overview)
+- ฝั่ง Backend: [Competition Checklist บท 29](/legacy/backend/29-checklist)
+- ฝั่ง Frontend: [Competition Checklist บท 20](/legacy/frontend/17-checklist)
+- กลับไปดูภาพรวมลำดับ: [แผนการรบ 6 ชม.](/legacy/integration/01-overview)

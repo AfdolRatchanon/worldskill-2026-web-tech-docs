@@ -410,4 +410,4 @@ setResult(resRes.data.data);                                    // [!code ++]
 - [ ] Postman: candidates/submissions/recheck/confirm + กฎ 403/400/404
 - [ ] browser: re-check → checked+score · confirm → ✓ · candidate เห็นผลเปลี่ยนเอง
 
-➡️ [Phase 6: Manager](/integration/08-phase6-manager) — สรุป + ranking + export
+➡️ [Phase 6: Manager](/legacy/integration/08-phase6-manager) — สรุป + ranking + export

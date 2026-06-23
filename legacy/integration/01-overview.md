@@ -40,14 +40,14 @@ flowchart LR
 
 | # | Phase | ต้องมีก่อน | ทดสอบแล้วได้ |
 |---|-------|-----------|-------------|
-| [0](/integration/02-phase0-foundation) | 🏗️ รากฐาน | — | 2 server คุยกันได้ (ไม่มี CORS error) |
-| [1](/integration/03-phase1-auth) | 🔐 Auth | 0 | login → redirect ตาม role |
-| [2](/integration/04-phase2-config-tasks) | 📋 Config + Tasks | 1 | candidate เห็น session + โจทย์ + นาฬิกา |
-| [3](/integration/05-phase3-session) | ⏱️ Session Lifecycle | 1 | judge เปิด/ปิด → candidate badge เปลี่ยน |
-| [4](/integration/06-phase4-submission) | 📤 Candidate Submission | 3 | ส่ง/แก้ URL ภายใต้กฎ 403/409 |
-| [5](/integration/07-phase5-judge-results) | ⚖️ Judge + Results | 4 | ตรวจ → ยืนยัน → candidate เห็นผล |
-| [6](/integration/08-phase6-manager) | 📊 Manager | 5 | สรุป / ranking / export |
-| [7](/integration/09-phase7-polish-deploy) | 🚀 Polish + Deploy | ทั้งหมด | รันบน LAN, seed ผ่าน, README |
+| [0](/legacy/integration/02-phase0-foundation) | 🏗️ รากฐาน | — | 2 server คุยกันได้ (ไม่มี CORS error) |
+| [1](/legacy/integration/03-phase1-auth) | 🔐 Auth | 0 | login → redirect ตาม role |
+| [2](/legacy/integration/04-phase2-config-tasks) | 📋 Config + Tasks | 1 | candidate เห็น session + โจทย์ + นาฬิกา |
+| [3](/legacy/integration/05-phase3-session) | ⏱️ Session Lifecycle | 1 | judge เปิด/ปิด → candidate badge เปลี่ยน |
+| [4](/legacy/integration/06-phase4-submission) | 📤 Candidate Submission | 3 | ส่ง/แก้ URL ภายใต้กฎ 403/409 |
+| [5](/legacy/integration/07-phase5-judge-results) | ⚖️ Judge + Results | 4 | ตรวจ → ยืนยัน → candidate เห็นผล |
+| [6](/legacy/integration/08-phase6-manager) | 📊 Manager | 5 | สรุป / ranking / export |
+| [7](/legacy/integration/09-phase7-polish-deploy) | 🚀 Polish + Deploy | ทั้งหมด | รันบน LAN, seed ผ่าน, README |
 
 :::warning ทำไมต้องเรียงแบบนี้
 ทดสอบ **Submission (4)** ต้องมี **Session open (3)** ก่อน · ดู **Result/Confirm (5)** ต้องมี **Submission (4)** ก่อน — ข้ามลำดับ = ทดสอบ happy path ไม่ได้ ต้องย้อนกลับมาทำใหม่ เสียเวลา
@@ -99,4 +99,4 @@ flowchart LR
 - [ ] `CORS origin` ต้องอนุญาต IP/port ของ FE ในห้อง ไม่ใช่ `localhost` อย่างเดียว
 - [ ] response ทุกตัวตรง format `{ success, data, meta }` / `{ success, message }` (TP §6)
 
-➡️ เริ่มที่ [Phase 0 — รากฐาน](/integration/02-phase0-foundation): ทำให้ 2 server คุยกันได้ก่อนเขียนฟีเจอร์แรก
+➡️ เริ่มที่ [Phase 0 — รากฐาน](/legacy/integration/02-phase0-foundation): ทำให้ 2 server คุยกันได้ก่อนเขียนฟีเจอร์แรก

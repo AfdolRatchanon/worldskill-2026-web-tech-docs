@@ -8,11 +8,11 @@
 
 | เรื่อง | บท | ใช้ตรงไหนใน Todolist |
 |-------|:--:|---------------------|
-| `useState` | [4](/frontend/04-usestate) | เก็บรายการ todo + ค่าในช่องกรอก |
-| controlled form + event | [4](/frontend/04-usestate) | พิมพ์ + กด Add (`onSubmit`/`preventDefault`) |
-| `.map` + `key` | [6](/frontend/rendering-patterns) | วาดรายการ todo |
-| conditional rendering | [6](/frontend/rendering-patterns) | empty state, ติ๊กแล้วขีดฆ่า, ปุ่ม filter |
-| `useEffect` + cleanup | [5](/frontend/05-useeffect) | จำ todo ไว้ใน localStorage |
+| `useState` | [4](/legacy/frontend/04-usestate) | เก็บรายการ todo + ค่าในช่องกรอก |
+| controlled form + event | [4](/legacy/frontend/04-usestate) | พิมพ์ + กด Add (`onSubmit`/`preventDefault`) |
+| `.map` + `key` | [6](/legacy/frontend/rendering-patterns) | วาดรายการ todo |
+| conditional rendering | [6](/legacy/frontend/rendering-patterns) | empty state, ติ๊กแล้วขีดฆ่า, ปุ่ม filter |
+| `useEffect` + cleanup | [5](/legacy/frontend/05-useeffect) | จำ todo ไว้ใน localStorage |
 
 > ไม่มี API → ไม่ต้องใช้บท 7 (Axios) และ 8 (Router) — Todolist โฟกัสที่ state + rendering ล้วน ๆ
 
@@ -217,4 +217,4 @@ Todolist กับ Dashboard ใน TSMS ใช้ **โครงเดียว
 | `addTodo` แก้ state ตรง ๆ | `SubmissionForm` ยิง `api.post()` แล้ว refresh |
 | `visible = todos.filter(...)` | `ranking`, pass/fail derive จากข้อมูล API |
 
-→ ขึ้นบท [10 AuthContext](/frontend/08-auth-context) เป็นต้นไป จะเริ่มต่อ backend จริง แต่ "ลีลา" การจัดการ state + วาด UI เหมือนที่ฝึกในบทนี้ทุกอย่าง
+→ ขึ้นบท [10 AuthContext](/legacy/frontend/08-auth-context) เป็นต้นไป จะเริ่มต่อ backend จริง แต่ "ลีลา" การจัดการ state + วาด UI เหมือนที่ฝึกในบทนี้ทุกอย่าง

@@ -444,4 +444,4 @@ import ManagerDashboard from './pages/manager/Dashboard';   // [!code ++]
 - [ ] Postman: stats 3 ตัว + report (json/csv) ด้วย token manager · role อื่น 403
 - [ ] browser: summary/pass-fail/ranking ขึ้น · เปลี่ยน session โหลดใหม่ · export ได้ 2 format
 
-➡️ [Phase 7: Polish + Deploy](/integration/09-phase7-polish-deploy) — เก็บงานให้รันบน LAN
+➡️ [Phase 7: Polish + Deploy](/legacy/integration/09-phase7-polish-deploy) — เก็บงานให้รันบน LAN

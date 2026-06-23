@@ -244,4 +244,4 @@ import JudgeDashboard from './pages/judge/Dashboard';   // [!code ++]
 - [ ] Postman: judge เปิด/ปิดได้ · candidate 403 · เปิดซ้ำ 400
 - [ ] browser: judge เปิด → candidate เห็นเปลี่ยนเองใน 5 วิ + นาฬิกาเดิน
 
-➡️ [Phase 4: Submission](/integration/06-phase4-submission) — candidate ส่ง URL ได้จริง
+➡️ [Phase 4: Submission](/legacy/integration/06-phase4-submission) — candidate ส่ง URL ได้จริง

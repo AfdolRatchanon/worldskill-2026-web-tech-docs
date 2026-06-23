@@ -264,4 +264,4 @@ import CandidateDashboard from './pages/candidate/Dashboard';   // [!code ++]
 - [ ] browser: candidate เห็นโจทย์ + Badge + โครง Dashboard
 - [ ] polling ยิงซ้ำทุก 5 วิ + หยุดเมื่อ logout
 
-➡️ [Phase 3: Session](/integration/05-phase3-session) — judge เปิด session แล้วนาฬิกานี้จะเดิน
+➡️ [Phase 3: Session](/legacy/integration/05-phase3-session) — judge เปิด session แล้วนาฬิกานี้จะเดิน

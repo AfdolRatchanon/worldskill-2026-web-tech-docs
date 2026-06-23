@@ -2,7 +2,7 @@
 
 > 🎯 **ทำตามทีละขั้น** — สร้างโปรเจ็ค Backend + Frontend จากศูนย์ จนทั้งสอง server รันได้ ก่อนเริ่มฟีเจอร์แรก
 >
-> ⏱️ ~0:30 · บทนี้ไม่อธิบายทฤษฎี เน้นพิมพ์ตาม (ทฤษฎีอยู่ใน [Backend บท 1–9](/backend/01-installation) และ [Frontend บท 1](/frontend/01-setup))
+> ⏱️ ~0:30 · บทนี้ไม่อธิบายทฤษฎี เน้นพิมพ์ตาม (ทฤษฎีอยู่ใน [Backend บท 1–9](/legacy/backend/01-installation) และ [Frontend บท 1](/legacy/frontend/01-setup))
 
 :::warning 🗄️ Database — ผู้จัดเตรียมให้ (ไม่ต้องสร้างเอง)
 ในสนามสอบจริง **schema + seed data ถูกเตรียมโดยฝ่ายผู้จัด** — คุณ **ไม่ต้องเขียน** `schema.sql` / `seed.js` เอง แค่ทำให้ MariaDB ของคุณมีฐานข้อมูลตามที่ผู้จัดให้ แล้วตั้งค่าใน `backend/.env` ให้ตรง
@@ -206,4 +206,4 @@ npm run dev      # ต้องเห็น Local: http://localhost:3000
 - [ ] โครงไฟล์ครบ: `backend/src/{config,app.js}` · `frontend/src/services/api.js` + `.env`
 - [ ] เข้าใจว่า **DB ผู้จัดเตรียมให้** — ต้องโหลดเข้า MariaDB ก่อน Phase 1
 
-➡️ รากฐานพร้อม — [Phase 1: Auth](/integration/03-phase1-auth) เขียน login ทะลุ BE→FE
+➡️ รากฐานพร้อม — [Phase 1: Auth](/legacy/integration/03-phase1-auth) เขียน login ทะลุ BE→FE

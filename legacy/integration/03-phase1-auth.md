@@ -340,4 +340,4 @@ export default function App() {
 - [ ] browser: login เด้งถูกหน้า · เข้าหน้าผิด role ไม่ได้ · refresh แล้วยังอยู่
 - [ ] ทุก request หลัง login แนบ token อัตโนมัติ
 
-➡️ [Phase 2: Config + Tasks](/integration/04-phase2-config-tasks) — ให้ candidate เห็นโจทย์ + นาฬิกา
+➡️ [Phase 2: Config + Tasks](/legacy/integration/04-phase2-config-tasks) — ให้ candidate เห็นโจทย์ + นาฬิกา
