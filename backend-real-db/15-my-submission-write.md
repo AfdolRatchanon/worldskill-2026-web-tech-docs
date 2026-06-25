@@ -120,6 +120,26 @@ router.put('/my-submission', authenticate, authorize('candidate'), ctrl.updateSu
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+**POST** (ส่งครั้งแรก) — Method `POST` · URL `http://localhost:8080/api/my-submission` · Authorization: Bearer Token → token **candidate** · แท็บ **Body** → `raw` → `JSON`:
+
+```json
+{
+  "frontend_url": "http://10.0.0.5:3000",
+  "backend_url": "http://10.0.0.5:8080/api"
+}
+```
+
+**PUT** (แก้ของเดิม) — เหมือนกันทุกอย่าง เปลี่ยน Method เป็น `PUT`
+
+| สถานการณ์ | ผลที่ควรได้ |
+|-----------|-------------|
+| session `active` + ส่งครั้งแรก (POST) | **201 Created** |
+| แก้ของเดิม (PUT) | **200 OK** |
+| POST ซ้ำคนเดิม | **409 Conflict** |
+| session ยังไม่เปิด / ไม่แนบ token | **403 / 401** |
+
 1. ตอนนี้ session ยังเป็น `initialized` → `POST /api/my-submission` ได้ **403** (ถูกต้อง! ต้องรอ judge เปิด)
 2. ข้ามไปเปิด session ก่อน (บทที่ 17) แล้วกลับมา POST (`http://10.0.0.5:3000`) → **201**
 3. POST ซ้ำ → **409** · PUT แก้ URL → **200**

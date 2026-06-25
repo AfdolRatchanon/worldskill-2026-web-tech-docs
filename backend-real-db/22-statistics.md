@@ -94,6 +94,17 @@ app.use('/api', require('./routes/statistics'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/statistics/summary` (และ `/statistics/status`) |
+| Authorization | Bearer Token → token **manager** |
+| Body | — |
+
+กด **Send** → **200** + ตัวเลขสรุป / pass-fail (token อื่น → **403**)
+
 login `manager`/`password`:
 
 ```json

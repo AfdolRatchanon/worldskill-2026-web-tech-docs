@@ -48,6 +48,17 @@ router.get('/submissions', authenticate, authorize('judge'), ctrl.getAllSubmissi
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/submissions` |
+| Authorization | Bearer Token → token **judge** |
+| Body | — |
+
+กด **Send** → **200** + รายการงานที่ส่ง (token candidate → **403**)
+
 login judge → `GET /api/submissions`
 
 ```json

@@ -52,6 +52,17 @@ app.use('/api', require('./routes/config'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/config` |
+| Authorization | Bearer Token → token (login ใครก็ได้) |
+| Body | — |
+
+กด **Send** → **200** + ข้อมูล session · ไม่แนบ token → **401**
+
 `GET /api/config` (แนบ `Authorization: Bearer <token>`)
 
 ```json

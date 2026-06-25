@@ -75,6 +75,8 @@ features:
 | 🏁 สรุป | 25 | Competition Checklist |
 | 🧩 บทเสริม (ออปชัน) | 26–27 | จับเวลาสอบ + ปิด session อัตโนมัติ · จำกัด URL ให้เป็น LAN |
 
+> 🧪 มีบท **[ทดสอบด้วย Postman](/backend-real-db/postman)** (หลังบท 11) + ทุก endpoint มีกล่อง **📮 ใน Postman** บอก Method/URL/token/Body ให้นักเรียนยิงทดสอบตามได้
+
 ### 🌐 Frontend (Real DB) — 10 บท + 3 บทเสริม
 
 ใช้ **`frontend-simple-real-db`** (เรียบง่าย เน้น logic) เป็นหลัก · ตัว **พร้อมแข่ง** (`frontend-real-db`: design system + responsive + a11y + countdown timer) อยู่ในบทเสริม

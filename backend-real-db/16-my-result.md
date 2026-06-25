@@ -59,6 +59,17 @@ app.use('/api', require('./routes/results'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/my-result` |
+| Authorization | Bearer Token → token **candidate** |
+| Body | — |
+
+กด **Send** → **200** + ผลคะแนน (candidate1 มี · candidate2 = `data: null`)
+
 login `candidate1`/`123456` → `GET /api/my-result`
 
 ```json

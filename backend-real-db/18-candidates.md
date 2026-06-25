@@ -83,6 +83,17 @@ app.use('/api', require('./routes/candidates'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/candidates` |
+| Authorization | Bearer Token → token **judge** |
+| Body | — |
+
+กด **Send** → **200** + รายชื่อ candidate (token candidate → **403**)
+
 login judge → `GET /api/candidates` → ได้ array 2 คน
 
 ```json

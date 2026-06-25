@@ -80,6 +80,17 @@ router.post('/submissions/:id/recheck', authenticate, authorize('judge'), ctrl.r
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `POST` |
+| URL | `http://localhost:8080/api/submissions/1/recheck` (1 = **submission id**) |
+| Authorization | Bearer Token → token **judge** |
+| Body | — |
+
+กด **Send** → **200** `Re-check started` → ดู `/candidates` เห็น `score` ใหม่ · id ไม่มี → **404**
+
 login judge:
 
 | ลำดับ | request | ผล |

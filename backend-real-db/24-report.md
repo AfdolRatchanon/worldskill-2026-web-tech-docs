@@ -76,6 +76,17 @@ app.use('/api', require('./routes/report'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/report` (CSV ใส่ `?format=csv`) |
+| Authorization | Bearer Token → token **manager** |
+| Body | — |
+
+กด **Send** → **200** JSON · ใส่ `?format=csv` → ได้ข้อความ CSV (กด **Save Response** เป็นไฟล์ได้)
+
 login manager:
 
 | request | ผล |

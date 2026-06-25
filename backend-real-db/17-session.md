@@ -91,6 +91,17 @@ app.use('/api', require('./routes/session'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `PUT` |
+| URL | `http://localhost:8080/api/session/start` (และ `/session/close`) |
+| Authorization | Bearer Token → token **judge** |
+| Body | — |
+
+start → **200** `active` · start ซ้ำ → **400** · close → **200** `closed`
+
 login `admin`/`password` (judge) แล้ว:
 
 | ลำดับ | request | ผล |

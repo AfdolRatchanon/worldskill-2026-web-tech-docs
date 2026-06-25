@@ -31,6 +31,10 @@ npm run dev
 | เปิดเบราว์เซอร์ไป `http://localhost:8080/` | `{"message":"Hello WorldSkill 2026"}` |
 | Postman: `GET http://localhost:8080/` | status **200** + JSON เดียวกัน |
 
+::: tip ยังไม่เคยใช้ Postman?
+GET แบบนี้เปิดในเบราว์เซอร์ก็ได้ (ไม่ต้อง login) — วิธีใช้ Postman ครบๆ (token, body, อ่าน status) อยู่ที่ [บท 📮 ทดสอบด้วย Postman](/backend-real-db/postman) หลังทำ Login เสร็จ
+:::
+
 ## เข้าใจโค้ด
 
 - `express()` สร้างแอป

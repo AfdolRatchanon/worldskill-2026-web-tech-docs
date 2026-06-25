@@ -64,6 +64,17 @@ app.use('/api', require('./routes/submissions'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/my-submission` |
+| Authorization | Bearer Token → token **candidate** |
+| Body | — |
+
+กด **Send** → **200** (candidate1 เห็น submission ตัวอย่าง · candidate2 = `null` · token judge → **403**)
+
 1. login `candidate1`/`123456` → เอา token มาแนบ
 2. `GET /api/my-submission` → เห็น submission ตัวอย่าง (id=1, task_id=1) ที่ seed ไว้
 3. login `candidate2`/`123456` แล้วเรียก → ได้ `data: null` (ยังไม่เคยส่ง)

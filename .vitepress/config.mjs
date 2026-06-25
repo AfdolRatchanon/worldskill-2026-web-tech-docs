@@ -55,6 +55,12 @@ export default withMermaid(defineConfig({
           ],
         },
         {
+          text: '🧪 เครื่องมือทดสอบ',
+          items: [
+            { text: '📮 ทดสอบด้วย Postman', link: '/backend-real-db/postman' },
+          ],
+        },
+        {
           text: '🌐 Shared Endpoints',
           items: [
             { text: '12 — ⚙️ Config', link: '/backend-real-db/12-config' },

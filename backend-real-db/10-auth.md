@@ -100,6 +100,18 @@ app.use('/api', require('./routes/auth'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+**Login** — Method `POST` · URL `http://localhost:8080/api/login` · Body `raw` → `JSON`:
+
+```json
+{ "username": "admin", "password": "password" }
+```
+
+กด **Send** → **200** + `data.token` → **copy token เก็บไว้** ใช้แนบบทต่อไป (รหัสผิด → 401)
+
+**Logout** — Method `POST` · URL `.../api/logout` · Authorization: Bearer Token → token → **200**
+
 | request | ต้องได้ |
 |---------|---------|
 | `POST /api/login` body `{"username":"admin","password":"password"}` | 200 + `data.token`, `role: "judge"` |

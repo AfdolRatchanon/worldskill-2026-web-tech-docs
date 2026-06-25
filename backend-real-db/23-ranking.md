@@ -49,6 +49,17 @@ router.get('/statistics/ranking', authenticate, authorize('manager'), ctrl.getRa
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/statistics/ranking` |
+| Authorization | Bearer Token → token **manager** |
+| Body | — |
+
+กด **Send** → **200** + อันดับ (เฉพาะคน confirm แล้ว · ยังไม่มี → `data: []`)
+
 login manager → `GET /api/statistics/ranking` (ต้องมีคนถูก confirm ก่อน)
 
 ```json

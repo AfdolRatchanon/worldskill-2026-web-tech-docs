@@ -47,6 +47,17 @@ app.use('/api', require('./routes/tasks'));   // [!code ++]
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `GET` |
+| URL | `http://localhost:8080/api/tasks` |
+| Authorization | Bearer Token → token (login ใครก็ได้) |
+| Body | — |
+
+กด **Send** → **200** + array ของโจทย์
+
 `GET /api/tasks` →
 
 ```json

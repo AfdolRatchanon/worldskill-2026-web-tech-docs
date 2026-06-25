@@ -29,6 +29,10 @@ app.get('/api/ping', async (req, res) => {              // [!code ++]
 | `users: 0` | ต่อ DB ได้แต่ยังไม่ได้ seed → รัน `npm run seed` |
 | error / 500 | ต่อ DB ไม่ได้ → เช็ก `.env` (DB_NAME, รหัส) และ MariaDB รันอยู่ไหม |
 
+::: tip ยิงด้วยอะไร
+GET แบบนี้เปิดในเบราว์เซอร์ก็ได้ หรือใช้ Postman — วิธีใช้ Postman เต็มดู [บท 📮 ทดสอบด้วย Postman](/backend-real-db/postman) (หลัง Login)
+:::
+
 ## ลบ route ทดสอบทิ้ง
 
 ผ่านแล้วลบ `/api/ping` ออก — ของจริงเราจะแยก route/controller เป็นไฟล์ ไม่เขียนรวมใน `app.js`

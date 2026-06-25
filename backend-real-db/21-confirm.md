@@ -63,6 +63,17 @@ router.put('/results/:candidate_id/confirm', authenticate, authorize('judge'), c
 
 ## ทดสอบ
 
+### 📮 ใน Postman
+
+| ช่อง | ค่า |
+|------|-----|
+| Method | `PUT` |
+| URL | `http://localhost:8080/api/results/3/confirm` (3 = user id ของ candidate) |
+| Authorization | Bearer Token → token **judge** |
+| Body | — |
+
+กด **Send** → **200** `confirmed` · confirm ซ้ำ → **400** · candidate ไม่มี result → **404** · ใช้ method GET → **404**
+
 login judge (ต้อง recheck candidate1 มาก่อนจากบท 20):
 
 | ลำดับ | request | ผล |
