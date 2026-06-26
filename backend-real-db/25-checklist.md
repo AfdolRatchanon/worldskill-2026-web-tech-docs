@@ -58,7 +58,7 @@ npm start         # หรือ npm run dev — รันที่ port 8080
 |----|------|
 | ส่ง/แก้ submission ได้เฉพาะ session `active` | 403 |
 | 1 candidate = 1 submission ต่อ task | 409 |
-| URL ต้องเป็น http(s) **และเป็น LAN/localhost** (ไม่ใช่โดเมน/public IP) | 400 |
+| URL ต้องขึ้นต้นด้วย `http://` หรือ `https://` (parse เป็น URL ได้) | 400 |
 | recheck ไม่ได้ถ้า result `confirmed` แล้ว | 403 |
 | confirm ซ้ำไม่ได้ | 400 |
 | confirm candidate ที่ยังไม่มี result | 404 |

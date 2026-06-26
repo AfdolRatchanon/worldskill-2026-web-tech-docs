@@ -26,7 +26,7 @@ export function removeToken() {
 | ฟังก์ชัน | ทำอะไร |
 |----------|--------|
 | `saveToken(token)` | เก็บ token ลง localStorage หลัง login สำเร็จ |
-| `getUser()` | ถอด payload จาก token → ได้ `{ id, username, role, full_name }` |
+| `getUser()` | ถอด payload จาก token → ได้ `{ id, username, role, full_name, candidate_code }` |
 | `removeToken()` | ลบ token ตอน logout |
 
 ::: tip `atob(token.split('.')[1])`

@@ -33,8 +33,8 @@ npm run dev       # port 3000
 
 ### 🎓 Candidate (แท็บใหม่ login `candidate2`)
 7. session `active` → ฟอร์มกรอกได้ · เห็นชื่อ + `(C02)` ที่หัวมุม
-8. ใส่ URL แบบ LAN เช่น `http://10.0.0.5:3000` กด Submit → `Submitted!`
-9. ใส่โดเมน public เช่น `https://example.com` (หรือไม่มี `http://`) → error 400 (ต้องเป็น LAN)
+8. ใส่ URL เช่น `http://10.0.0.5:3000` กด Submit → `Submitted!`
+9. ใส่ค่าที่ไม่ใช่ URL เช่น `example.com` (ไม่มี `http://`) → error 400
 10. แก้ URL แล้ว Update → สำเร็จ
 
 ### ⚖️ Judge (กลับมาตรวจ)

@@ -114,7 +114,7 @@ router.put('/my-submission', authenticate, authorize('candidate'), ctrl.updateSu
 :::
 
 ::: tip ออปชันที่แยกไว้บทเสริม (คะแนนน้อย/จำยาก — ข้ามก่อนได้)
-- **ตรวจสอบรูปแบบ URL** (http(s) + จำกัดเป็น LAN เท่านั้น) → [บทเสริม 27](/backend-real-db/27-lan-url-validation)
+- **ตรวจสอบรูปแบบ URL** (ต้องขึ้นต้น http(s) และ parse เป็น URL ได้) → [บทเสริม 27](/backend-real-db/27-lan-url-validation)
 - **กันส่งงานหลังหมดเวลาสอบ** (เปลี่ยน `getLatestSession()` → `resolveSession()`) → [บทเสริม 26](/backend-real-db/26-session-timer)
 :::
 

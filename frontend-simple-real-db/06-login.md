@@ -49,7 +49,7 @@ export default function Login() {
 ## จุดที่ต้องเข้าใจ
 
 - **Controlled input**: `value={username}` + `onChange={...setUsername...}` → state เป็นแหล่งความจริงเดียวของช่องกรอก
-- **`res.data.data.token`**: backend ตอบ `{ success, data: { token, role, full_name }, meta }` → token อยู่ที่ `data.data.token`
+- **`res.data.data.token`**: backend ตอบ `{ success, data: { token, role, full_name, candidate_code }, meta }` → token อยู่ที่ `data.data.token`
 - **`navigate('/' + res.data.data.role)`**: role เป็น `candidate`/`judge`/`manager` ตรงกับ path ใน `App.jsx` พอดี
 
 ::: tip รหัส plain-text — login ได้เลย

@@ -73,7 +73,7 @@ features:
 | ⚖️ Judge | 17–21 | Session · Candidates · Submissions · Recheck · Confirm |
 | 📊 Manager | 22–24 | Statistics · Ranking · Report |
 | 🏁 สรุป | 25 | Competition Checklist |
-| 🧩 บทเสริม (ออปชัน) | 26–27 | จับเวลาสอบ + ปิด session อัตโนมัติ · จำกัด URL ให้เป็น LAN |
+| 🧩 บทเสริม (ออปชัน) | 26–27 | จับเวลาสอบ + ปิด session อัตโนมัติ · ตรวจรูปแบบ URL (http/https) |
 
 > 🧪 มีบท **[ทดสอบด้วย Postman](/backend-real-db/postman)** (หลังบท 11) + ทุก endpoint มีกล่อง **📮 ใน Postman** บอก Method/URL/token/Body ให้นักเรียนยิงทดสอบตามได้
 
