@@ -73,6 +73,7 @@ features:
 | ⚖️ Judge | 17–21 | Session · Candidates · Submissions · Recheck · Confirm |
 | 📊 Manager | 22–24 | Statistics · Ranking · Report |
 | 🏁 สรุป | 25 | Competition Checklist |
+| 📑 อ้างอิง | — | [API Reference (สรุปทุก endpoint สำหรับท่อง)](/backend-real-db/api-reference) |
 | 🧩 บทเสริม (ออปชัน) | 26–27 | จับเวลาสอบ + ปิด session อัตโนมัติ · ตรวจรูปแบบ URL (http/https) |
 
 > 🧪 มีบท **[ทดสอบด้วย Postman](/backend-real-db/postman)** (หลังบท 11) + ทุก endpoint มีกล่อง **📮 ใน Postman** บอก Method/URL/token/Body ให้นักเรียนยิงทดสอบตามได้
@@ -87,6 +88,7 @@ features:
 | 🧰 ไฟล์กลาง | 3–5 | auth.js (Token) · api.js (Axios + Interceptor) · App.jsx (Router + ProtectedRoute) |
 | 📄 สร้างทีละหน้า | 6–9 | Login · Candidate · Judge · Manager |
 | 🏁 สรุป | 10 | ทดสอบทั้งระบบ |
+| 📑 อ้างอิง | — | [Pages Reference (สรุปทุกหน้าสำหรับท่อง)](/frontend-simple-real-db/pages-reference) |
 | 🏆 บทเสริม (พร้อมแข่ง) | 11–13 | ภาพรวม · Countdown Timer · Design System + a11y |
 
 ### 📦 เอกสารเดิม (อ้างอิง — ไม่ใช่ schema ทางการ)

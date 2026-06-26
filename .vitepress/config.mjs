@@ -97,6 +97,7 @@ export default withMermaid(defineConfig({
           text: '🏁 สรุป',
           items: [
             { text: '25 — 🏆 Competition Checklist', link: '/backend-real-db/25-checklist' },
+            { text: '📑 API Reference (สรุปท่อง)', link: '/backend-real-db/api-reference' },
             { text: '📖 คำศัพท์', link: '/glossary' },
           ],
         },
@@ -104,7 +105,7 @@ export default withMermaid(defineConfig({
           text: '🧩 บทเสริม (ออปชัน)',
           items: [
             { text: '⏱️ จับเวลา + ปิด session อัตโนมัติ', link: '/backend-real-db/26-session-timer' },
-            { text: '🔒 จำกัด URL ให้เป็น LAN', link: '/backend-real-db/27-lan-url-validation' },
+            { text: '🔒 ตรวจรูปแบบ URL (http/https)', link: '/backend-real-db/27-lan-url-validation' },
           ],
         },
       ],
@@ -138,6 +139,7 @@ export default withMermaid(defineConfig({
           text: '🏁 สรุป',
           items: [
             { text: '10 — ✅ ทดสอบทั้งระบบ', link: '/frontend-simple-real-db/10-testing' },
+            { text: '📑 Pages Reference (สรุปท่อง)', link: '/frontend-simple-real-db/pages-reference' },
             { text: '📖 คำศัพท์', link: '/glossary' },
           ],
         },
