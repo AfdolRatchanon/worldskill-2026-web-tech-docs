@@ -2,7 +2,7 @@
 
 > **หน้านี้คืออะไร:** สรุปว่าแต่ละหน้า **ใช้ endpoint ไหน ทำอะไร เงื่อนไขปุ่มอะไร** ไว้หน้าเดียวสำหรับทบทวน/ท่องก่อนแข่ง — ตรงกับที่สอนทีละหน้าใน [บท 6–9](/frontend-simple-real-db/06-login)
 
-แอปเป็น React + Vite + axios + react-router-dom มี **4 หน้า** แยกตาม role
+แอปเป็น React + Vite + axios + react-router (v7) มี **4 หน้า** แยกตาม role
 Backend อยู่ที่ `http://localhost:8080/api` (ตั้งใน `src/api.js`)
 
 ## โครงร่วมที่ทุกหน้าใช้ (ต้องจำ)

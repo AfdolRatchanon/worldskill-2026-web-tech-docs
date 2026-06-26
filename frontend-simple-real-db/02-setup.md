@@ -8,14 +8,14 @@
 npm create vite@latest frontend-simple-real-db -- --template react
 cd frontend-simple-real-db
 npm install
-npm install axios react-router-dom
+npm install axios react-router
 ```
 
 | library | ทำอะไร |
 |---------|--------|
 | `react` / `react-dom` | ตัว React |
 | `axios` | ยิง HTTP ไป backend |
-| `react-router-dom` | สลับหน้า (routing) |
+| `react-router` | สลับหน้า (routing) — v7 |
 | `vite` (dev) | dev server + build |
 
 ## `package.json` — ตั้ง script

@@ -5,7 +5,7 @@
 ## `src/App.jsx`
 
 ```jsx
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { getUser } from './auth';
 import Login from './pages/Login';
 import CandidatePage from './pages/CandidatePage';
